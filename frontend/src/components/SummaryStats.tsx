@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useRef, useEffect } from 'react';
 import { Users, Eye, Activity, Award, TrendingUp } from 'lucide-react';
@@ -117,7 +117,7 @@ export default function SummaryStats({
         return (
           <div
             key={idx}
-            className={`stat-card group relative overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/30 backdrop-blur-xl p-5 transition-all duration-300 hover:-translate-y-1.5 ${stat.border} cursor-default`}
+            className={`stat-card group relative overflow-hidden rounded-2xl bg-slate-900/30 backdrop-blur-xl p-5 transition-all duration-300 hover:-translate-y-1.5 cursor-default`}
             style={{
               transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
             }}
