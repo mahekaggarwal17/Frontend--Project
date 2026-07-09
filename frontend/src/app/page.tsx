@@ -239,46 +239,83 @@ function CreatorDirectoryContent() {
         </div>
       )}
 
-      {/* Page Title Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-slate-600">Management Console</span>
-            <span className="h-[1px] flex-1 max-w-[60px] bg-gradient-to-r from-[#00BCFF]/30 to-transparent" />
+      {/* ── Hero Banner ─────────────────────────────────────────── */}
+      {/* Break out of parent padding with negative margin + full width */}
+      <div className="relative -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden">
+        {/* Layered backgrounds */}
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/40 via-slate-900/60 to-[#030712]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a30_1px,transparent_1px),linear-gradient(to_bottom,#0f172a30_1px,transparent_1px)] bg-[size:40px_40px]" aria-hidden="true" />
+
+        {/* Neon top edge */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#00BCFF]/40 to-transparent" aria-hidden="true" />
+        {/* Neon bottom edge */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" aria-hidden="true" />
+
+        {/* Ambient glow blobs inside banner */}
+        <div className="absolute -top-16 left-1/4 w-96 h-48 rounded-full bg-indigo-600/10 blur-3xl pointer-events-none" aria-hidden="true" />
+        <div className="absolute -top-8 right-1/4 w-72 h-40 rounded-full bg-[#00BCFF]/8 blur-3xl pointer-events-none" aria-hidden="true" />
+
+        {/* Banner content — re-apply horizontal padding */}
+        <div className="relative px-4 sm:px-6 lg:px-8 py-12 sm:py-16 max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+
+            {/* Left: text */}
+            <div className="space-y-3">
+              {/* Breadcrumb label */}
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00BCFF] animate-pulse" aria-hidden="true" />
+                <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-slate-500">
+                  Management Console
+                </span>
+                <span className="h-[1px] w-12 bg-gradient-to-r from-[#00BCFF]/30 to-transparent" aria-hidden="true" />
+              </div>
+
+              {/* Main heading */}
+              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight font-display leading-none">
+                <span className="neon-text-shimmer">Creator Directory</span>
+              </h1>
+
+              {/* Subheading */}
+              <p className="text-sm text-slate-400 max-w-md leading-relaxed">
+                Monitor and manage your influencer talent database with real-time analytics and deep engagement insights.
+              </p>
+
+              {/* Meta tags row */}
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                {['Beauty', 'Fitness', 'Travel', 'Food', 'Tech', 'Fashion'].map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold border border-slate-800/80 bg-slate-900/60 text-slate-500"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: action buttons */}
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={handleExportCSV}
+                className="group flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl border border-slate-700/60 bg-slate-900/40 text-slate-400 hover:border-[#BBF351]/50 hover:text-[#BBF351] hover:shadow-[0_0_16px_rgba(187,243,81,0.15)] hover:bg-[#BBF351]/5 transition-all duration-300 cursor-pointer"
+              >
+                <Download size={16} className="group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
+                <span>Export CSV</span>
+              </button>
+
+              <button
+                onClick={() => { setSelectedCreator(null); setIsModalOpen(true); }}
+                className="group relative flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl overflow-hidden border border-[#00BCFF]/40 text-[#00BCFF] shadow-[0_0_16px_rgba(0,188,255,0.15)] hover:shadow-[0_0_30px_rgba(0,188,255,0.30)] hover:border-[#00BCFF]/70 hover:bg-[#00BCFF]/10 transition-all duration-300 cursor-pointer"
+              >
+                <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-transparent via-[#00BCFF]/5 to-transparent" aria-hidden="true" />
+                <Plus size={16} className="relative z-10 group-hover:rotate-90 transition-transform duration-200" aria-hidden="true" />
+                <span className="relative z-10">Add Creator</span>
+              </button>
+            </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-display">
-            <span className="neon-text-shimmer">Creator Directory</span>
-          </h1>
-          <p className="text-sm text-slate-500 max-w-md">
-            Monitor and manage your influencer talent database with real-time analytics.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleExportCSV}
-            className="group flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl border border-slate-800/80 bg-slate-900/20 text-slate-400 hover:border-[#BBF351]/50 hover:text-[#BBF351] hover:shadow-[0_0_16px_rgba(187,243,81,0.15)] hover:bg-[#BBF351]/5 transition-all duration-300 cursor-pointer"
-          >
-            <Download size={16} className="group-hover:scale-110 transition-transform duration-300" />
-            <span>Export CSV</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setSelectedCreator(null);
-              setIsModalOpen(true);
-            }}
-            className="group relative flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl overflow-hidden border border-[#00BCFF]/40 text-[#00BCFF] shadow-[0_0_16px_rgba(0,188,255,0.15)] hover:shadow-[0_0_30px_rgba(0,188,255,0.30)] hover:border-[#00BCFF]/70 hover:bg-[#00BCFF]/10 transition-all duration-300 cursor-pointer"
-          >
-            <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-transparent via-[#00BCFF]/5 to-transparent" />
-            <Plus size={16} className="relative z-10 group-hover:rotate-90 transition-transform duration-300" />
-            <span className="relative z-10">Add Creator</span>
-          </button>
         </div>
       </div>
-
-      {/* Divider */}
-      <div className="h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent" />
+      {/* ── End Banner ───────────────────────────────────────────── */}
 
       {/* Monk-E style hero stat counters with corner brackets */}
       <HeroStats />
