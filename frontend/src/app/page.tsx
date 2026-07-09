@@ -15,7 +15,7 @@ import FilterBar from '../components/FilterBar';
 import CreatorsTable from '../components/CreatorsTable';
 import CreatorModal from '../components/CreatorModal';
 import DeleteModal from '../components/DeleteModal';
-import { Plus, Users, CheckCircle2, Download } from 'lucide-react';
+import { Plus, CheckCircle2, Download } from 'lucide-react';
 import { fetchCreators } from '../lib/api';
 
 function CreatorDirectoryContent() {
@@ -228,35 +228,36 @@ function CreatorDirectoryContent() {
   };
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 border border-emerald-500/30 bg-slate-900 text-emerald-400 rounded-xl shadow-xl shadow-emerald-950/20 animate-scale-up">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 border border-[#00BCFF]/30 bg-slate-900/95 backdrop-blur-xl text-[#00BCFF] rounded-2xl shadow-[0_0_30px_rgba(0,188,255,0.15)] animate-scale-up">
           <CheckCircle2 size={18} />
           <span className="text-sm font-semibold">{notification}</span>
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-900 pb-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-100 flex items-center gap-3 font-display">
-            <span className="p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
-              <Users size={28} />
-            </span>
-            Creator Directory
+      {/* Page Title Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-slate-600">Management Console</span>
+            <span className="h-[1px] flex-1 max-w-[60px] bg-gradient-to-r from-[#00BCFF]/30 to-transparent" />
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight font-display">
+            <span className="neon-text-shimmer">Creator Directory</span>
           </h1>
-          <p className="text-sm text-slate-400">
-            Monitor and manage your influencer talent database with real-time stats.
+          <p className="text-sm text-slate-500 max-w-md">
+            Monitor and manage your influencer talent database with real-time analytics.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={handleExportCSV}
-            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl border border-slate-800 bg-slate-900/10 text-slate-350 hover:border-[#BBF351]/50 hover:text-[#BBF351] hover:shadow-[0_0_15px_rgba(187,243,81,0.15)] hover:bg-[#BBF351]/5 transition-all duration-300 cursor-pointer"
+            className="group flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl border border-slate-800/80 bg-slate-900/20 text-slate-400 hover:border-[#BBF351]/50 hover:text-[#BBF351] hover:shadow-[0_0_16px_rgba(187,243,81,0.15)] hover:bg-[#BBF351]/5 transition-all duration-300 cursor-pointer"
           >
-            <Download size={18} />
+            <Download size={16} className="group-hover:scale-110 transition-transform duration-300" />
             <span>Export CSV</span>
           </button>
 
@@ -265,13 +266,17 @@ function CreatorDirectoryContent() {
               setSelectedCreator(null);
               setIsModalOpen(true);
             }}
-            className="flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl bg-slate-900 border border-[#00BCFF]/50 text-[#00BCFF] shadow-[0_0_15px_rgba(0,188,255,0.15)] hover:bg-[#00BCFF] hover:text-slate-950 transition-all duration-300 cursor-pointer"
+            className="group relative flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl overflow-hidden border border-[#00BCFF]/40 text-[#00BCFF] shadow-[0_0_16px_rgba(0,188,255,0.15)] hover:shadow-[0_0_30px_rgba(0,188,255,0.30)] hover:border-[#00BCFF]/70 hover:bg-[#00BCFF]/10 transition-all duration-300 cursor-pointer"
           >
-            <Plus size={18} />
-            <span>Add Creator</span>
+            <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-transparent via-[#00BCFF]/5 to-transparent" />
+            <Plus size={16} className="relative z-10 group-hover:rotate-90 transition-transform duration-300" />
+            <span className="relative z-10">Add Creator</span>
           </button>
         </div>
       </div>
+
+      {/* Divider */}
+      <div className="h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent" />
 
       {/* Summary Stats Dashboard */}
       <SummaryStats
@@ -352,10 +357,14 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <div className="flex-1 flex items-center justify-center min-h-screen">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-slate-800 border-t-indigo-500 rounded-full animate-spin"></div>
-            <p className="text-sm text-slate-400 font-medium">Loading Dashboard...</p>
+        <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative w-14 h-14">
+              <div className="absolute inset-0 rounded-full border-4 border-slate-800" />
+              <div className="absolute inset-0 rounded-full border-4 border-t-[#00BCFF] border-r-[#8B5CF6]/40 border-b-transparent border-l-transparent animate-spin" />
+              <div className="absolute inset-3 rounded-full bg-[#00BCFF]/10 animate-pulse" />
+            </div>
+            <p className="text-sm text-slate-500 font-medium font-mono tracking-wider">Initializing Dashboard...</p>
           </div>
         </div>
       }

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -37,14 +39,23 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-[#030712] text-slate-100 font-sans relative overflow-x-hidden">
-        {/* Aurora Mesh Gradient Elements */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-indigo-500/10 blur-[130px] opacity-70" />
-          <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-purple-500/8 blur-[120px] opacity-60" />
-          <div className="absolute top-[40%] left-[25%] w-[45%] h-[45%] rounded-full bg-pink-500/5 blur-[120px] opacity-50" />
+        {/* Aurora Mesh Gradient Background */}
+        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+          <div className="aurora-blob aurora-blob-1" />
+          <div className="aurora-blob aurora-blob-2" />
+          <div className="aurora-blob aurora-blob-3" />
+          {/* Grid overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a20_1px,transparent_1px),linear-gradient(to_bottom,#0f172a20_1px,transparent_1px)] bg-[size:64px_64px]" />
         </div>
+
         <div className="relative z-10 flex flex-col min-h-screen">
-          <Providers>{children}</Providers>
+          <Providers>
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </Providers>
         </div>
       </body>
     </html>
