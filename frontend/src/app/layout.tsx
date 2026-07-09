@@ -24,8 +24,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Creator CRM Admin - Influencer Directory",
-  description: "Manage influencer relationships, categories, follower counts, and engagement rates.",
+  title: "CreatorCRM — Influencer & Creator Management Dashboard",
+  description: "Manage influencer relationships, categories, follower counts, and engagement rates. Full-featured creator CRM with real-time analytics.",
+  keywords: ["creator management", "influencer CRM", "influencer directory", "engagement analytics"],
 };
 
 export default function RootLayout({
@@ -48,10 +49,11 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a20_1px,transparent_1px),linear-gradient(to_bottom,#0f172a20_1px,transparent_1px)] bg-[size:64px_64px]" />
         </div>
 
-        <div className="relative z-10 flex flex-col min-h-screen">
+        <div className="relative z-10 flex flex-col min-h-dvh">
           <Providers>
             <Header />
-            <main className="flex-1">
+            {/* role=main + id for skip-link target (UI/UX Pro Max: skip-links, keyboard-nav) */}
+            <main id="main-content" role="main" className="flex-1">
               {children}
             </main>
             <Footer />

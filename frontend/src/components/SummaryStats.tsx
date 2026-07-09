@@ -104,14 +104,19 @@ export default function SummaryStats({
   }, [isLoading]);
 
   const values = [
-    isLoading ? 'ΓÇö' : total.toString(),
-    isLoading ? 'ΓÇö' : formatNumber(totalFollowers),
-    isLoading ? 'ΓÇö' : `${avgEngagement}%`,
-    isLoading ? 'ΓÇö' : `${activeCount} / ${total}`,
+    isLoading ? null : total.toString(),
+    isLoading ? null : formatNumber(totalFollowers),
+    isLoading ? null : `${avgEngagement}%`,
+    isLoading ? null : `${activeCount} / ${total}`,
   ];
 
   return (
-    <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div
+      ref={containerRef}
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      role="region"
+      aria-label="Summary statistics"
+    >
       {STATS_CONFIG.map((stat, idx) => {
         const Icon = stat.icon;
         return (
@@ -142,36 +147,49 @@ export default function SummaryStats({
               {/* Top row */}
               <div className="flex items-start justify-between mb-4">
                 <div
-                  className={`p-2.5 rounded-xl border border-white/5 ${stat.iconBg} group-hover:scale-110 transition-transform duration-300`}
+                  className={`p-2.5 rounded-xl border border-white/5 ${stat.iconBg} group-hover:scale-110 transition-transform duration-200`}
+                  aria-hidden="true"
                 >
                   <Icon size={18} />
                 </div>
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800/60 border border-slate-700/40">
-                  <TrendingUp size={10} style={{ color: stat.accent }} />
+                <div
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800/60 border border-slate-700/40"
+                  aria-label={`Trend: ${stat.trend}`}
+                >
+                  <TrendingUp size={10} style={{ color: stat.accent }} aria-hidden="true" />
                   <span className="text-[10px] font-mono font-semibold" style={{ color: stat.accent }}>
                     {stat.trend}
                   </span>
                 </div>
               </div>
 
-              {/* Value */}
+              {/* Value — skeleton shimmer when loading (UI/UX Pro Max: progressive-loading) */}
               <div className="space-y-1">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 group-hover:text-slate-400 transition-colors duration-300">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 group-hover:text-slate-400 transition-colors duration-200">
                   {stat.title}
                 </p>
-                <h3 className="text-2xl font-bold tracking-tight text-slate-100 group-hover:text-white transition-colors duration-300 font-display">
-                  {values[idx]}
-                </h3>
-                <p className="text-[11px] text-slate-600 group-hover:text-slate-500 transition-colors duration-300">
+                {values[idx] === null ? (
+                  <div className="h-8 w-20 rounded-lg bg-slate-800/70 animate-pulse" aria-hidden="true" />
+                ) : (
+                  <h3
+                    className="text-2xl font-bold tracking-tight text-slate-100 group-hover:text-white transition-colors duration-200 font-display"
+                    aria-label={`${stat.title}: ${values[idx]}`}
+                  >
+                    {values[idx]}
+                  </h3>
+                )}
+                <p className="text-[11px] text-slate-600 group-hover:text-slate-500 transition-colors duration-200">
                   {stat.description}
                 </p>
               </div>
 
-              {/* Bottom accent bar */}
-              <div
-                className="mt-4 h-[2px] w-0 rounded-full group-hover:w-full transition-all duration-500 ease-out"
-                style={{ background: `linear-gradient(90deg, ${stat.accent}, transparent)` }}
-              />
+              {/* Bottom accent bar — transform only, no width (UI/UX Pro Max: transform-performance) */}
+              <div className="mt-4 h-[2px] overflow-hidden rounded-full" aria-hidden="true">
+                <div
+                  className="h-full w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${stat.accent}, transparent)` }}
+                />
+              </div>
             </div>
           </div>
         );
