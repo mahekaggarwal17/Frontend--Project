@@ -10,6 +10,7 @@ import {
 } from '../hooks/useCreators';
 import { Creator } from '../types';
 import SummaryStats from '../components/SummaryStats';
+import NicheBreakdown from '../components/NicheBreakdown';
 import FilterBar from '../components/FilterBar';
 import CreatorsTable from '../components/CreatorsTable';
 import CreatorModal from '../components/CreatorModal';
@@ -253,6 +254,13 @@ function CreatorDirectoryContent() {
         totalFollowers={creatorsData?.stats?.totalFollowers || 0}
         avgEngagement={creatorsData?.stats?.avgEngagement || 0}
         activeCount={creatorsData?.stats?.activeCount || 0}
+        isLoading={isLoading}
+      />
+
+      {/* Niche Category Distribution Chart */}
+      <NicheBreakdown
+        nicheCounts={creatorsData?.stats?.nicheCounts}
+        total={creatorsData?.total || 0}
         isLoading={isLoading}
       />
 

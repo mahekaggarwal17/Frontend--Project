@@ -51,6 +51,10 @@ app.get("/creators", (req, res) => {
     ? Number((results.reduce((sum, c) => sum + c.engagementRate, 0) / total).toFixed(1))
     : 0;
   const activeCount = results.filter((c) => c.status === "active").length;
+  const nicheCounts = results.reduce((acc, c) => {
+    acc[c.niche] = (acc[c.niche] || 0) + 1;
+    return acc;
+  }, { beauty: 0, fitness: 0, travel: 0, food: 0, tech: 0, fashion: 0 });
 
   // Sorting
   if (sortBy) {
@@ -81,6 +85,7 @@ app.get("/creators", (req, res) => {
       totalFollowers,
       avgEngagement,
       activeCount,
+      nicheCounts,
     },
   });
 });

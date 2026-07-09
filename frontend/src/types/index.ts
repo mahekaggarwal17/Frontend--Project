@@ -20,6 +20,7 @@ export interface CreatorResponse {
     totalFollowers: number;
     avgEngagement: number;
     activeCount: number;
+    nicheCounts: Record<Niche, number>;
   };
 }
 
