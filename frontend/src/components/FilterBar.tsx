@@ -5,16 +5,18 @@ import { Niche } from '../types';
 import { Search, RotateCcw } from 'lucide-react';
 
 interface FilterBarProps {
+  search: string;
   niche: string;
   minFollowers: string;
   maxFollowers: string;
-  onChange: (updates: { niche?: string; minFollowers?: string; maxFollowers?: string }) => void;
+  onChange: (updates: { search?: string; niche?: string; minFollowers?: string; maxFollowers?: string }) => void;
   onClear: () => void;
 }
 
 const NICHES: Niche[] = ['beauty', 'fitness', 'travel', 'food', 'tech', 'fashion'];
 
 export default function FilterBar({
+  search,
   niche,
   minFollowers,
   maxFollowers,
@@ -22,8 +24,13 @@ export default function FilterBar({
   onClear,
 }: FilterBarProps) {
   // Local states for inputs to avoid immediate layout lag (and allow standard typing)
+  const [localSearch, setLocalSearch] = useState(search);
   const [localMin, setLocalMin] = useState(minFollowers);
   const [localMax, setLocalMax] = useState(maxFollowers);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
 
   useEffect(() => {
     setLocalMin(minFollowers);
@@ -36,17 +43,51 @@ export default function FilterBar({
   // Debounce helper
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (localMin !== minFollowers || localMax !== maxFollowers) {
-        onChange({ minFollowers: localMin, maxFollowers: localMax });
+      const updates: { search?: string; minFollowers?: string; maxFollowers?: string } = {};
+      let hasUpdates = false;
+
+      if (localSearch !== search) {
+        updates.search = localSearch;
+        hasUpdates = true;
+      }
+      if (localMin !== minFollowers) {
+        updates.minFollowers = localMin;
+        hasUpdates = true;
+      }
+      if (localMax !== maxFollowers) {
+        updates.maxFollowers = localMax;
+        hasUpdates = true;
+      }
+
+      if (hasUpdates) {
+        onChange(updates);
       }
     }, 400);
 
     return () => clearTimeout(handler);
-  }, [localMin, localMax, minFollowers, maxFollowers, onChange]);
+  }, [localSearch, localMin, localMax, search, minFollowers, maxFollowers, onChange]);
 
   return (
     <div className="p-5 border border-slate-800 bg-slate-900/50 backdrop-blur-md rounded-2xl space-y-4">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        {/* Search Input */}
+        <div className="w-full lg:w-1/3">
+          <label htmlFor="search-filter" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            Search Creators
+          </label>
+          <div className="relative">
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              id="search-filter"
+              type="text"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              placeholder="Search by name or email..."
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/50 text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition"
+            />
+          </div>
+        </div>
+
         {/* Niche Selector */}
         <div className="w-full lg:w-1/4">
           <label htmlFor="niche-filter" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">

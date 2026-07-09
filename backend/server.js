@@ -16,14 +16,27 @@ app.get("/creators", (req, res) => {
     niche,
     minFollowers,
     maxFollowers,
+    search,
   } = req.query;
 
   let results = [...creators];
 
-  // Filtering
+  // Search Filter (Name or Email)
+  if (search) {
+    const query = search.toLowerCase().trim();
+    results = results.filter(
+      (c) =>
+        c.name.toLowerCase().includes(query) ||
+        c.email.toLowerCase().includes(query)
+    );
+  }
+
+  // Niche Filter
   if (niche) {
     results = results.filter((c) => c.niche === niche);
   }
+
+  // Follower Range Filters
   if (minFollowers) {
     results = results.filter((c) => c.followerCount >= Number(minFollowers));
   }
@@ -31,13 +44,20 @@ app.get("/creators", (req, res) => {
     results = results.filter((c) => c.followerCount <= Number(maxFollowers));
   }
 
+  // Calculate stats on the filtered subset (before pagination)
+  const total = results.length;
+  const totalFollowers = results.reduce((sum, c) => sum + c.followerCount, 0);
+  const avgEngagement = total > 0
+    ? Number((results.reduce((sum, c) => sum + c.engagementRate, 0) / total).toFixed(1))
+    : 0;
+  const activeCount = results.filter((c) => c.status === "active").length;
+
   // Sorting
   if (sortBy) {
     results.sort((a, b) => {
       let valA = a[sortBy];
       let valB = b[sortBy];
 
-      // Handle strings or numbers
       if (typeof valA === "string") {
         return order === "desc"
           ? valB.localeCompare(valA)
@@ -48,7 +68,7 @@ app.get("/creators", (req, res) => {
     });
   }
 
-  const total = results.length;
+  // Pagination
   const start = (Number(page) - 1) * Number(limit);
   const paginatedData = results.slice(start, start + Number(limit));
 
@@ -57,13 +77,17 @@ app.get("/creators", (req, res) => {
     total,
     page: Number(page),
     limit: Number(limit),
+    stats: {
+      totalFollowers,
+      avgEngagement,
+      activeCount,
+    },
   });
 });
 
 app.post("/creators", (req, res) => {
   const { name, niche, followerCount, engagementRate, email, status } = req.body;
 
-  // Server-side validation
   if (!name || !niche || !email) {
     return res.status(400).json({ error: "Missing required fields: name, niche, email" });
   }
@@ -91,7 +115,6 @@ app.patch("/creators/:id", (req, res) => {
     return res.status(404).json({ error: "Creator not found" });
   }
 
-  // Merge changes and parse numbers appropriately
   const updates = { ...req.body };
   if (updates.followerCount !== undefined) updates.followerCount = Number(updates.followerCount);
   if (updates.engagementRate !== undefined) updates.engagementRate = Number(updates.engagementRate);

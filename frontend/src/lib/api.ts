@@ -12,6 +12,7 @@ export async function fetchCreators(filters: CreatorFilters): Promise<CreatorRes
   if (filters.niche) params.append('niche', filters.niche);
   if (filters.minFollowers !== undefined) params.append('minFollowers', String(filters.minFollowers));
   if (filters.maxFollowers !== undefined) params.append('maxFollowers', String(filters.maxFollowers));
+  if (filters.search) params.append('search', filters.search);
 
   const response = await fetch(`${API_BASE_URL}/creators?${params.toString()}`);
   if (!response.ok) {

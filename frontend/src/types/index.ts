@@ -16,6 +16,11 @@ export interface CreatorResponse {
   total: number;
   page: number;
   limit: number;
+  stats?: {
+    totalFollowers: number;
+    avgEngagement: number;
+    activeCount: number;
+  };
 }
 
 export interface CreatorFilters {
@@ -26,4 +31,5 @@ export interface CreatorFilters {
   niche?: string;
   minFollowers?: number;
   maxFollowers?: number;
+  search?: string;
 }

@@ -8,20 +8,22 @@ import {
   useUpdateCreatorMutation, 
   useDeleteCreatorMutation 
 } from '../hooks/useCreators';
-import { Creator, Niche } from '../types';
+import { Creator } from '../types';
+import SummaryStats from '../components/SummaryStats';
 import FilterBar from '../components/FilterBar';
 import CreatorsTable from '../components/CreatorsTable';
 import CreatorModal from '../components/CreatorModal';
 import DeleteModal from '../components/DeleteModal';
-import { Plus, Users, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Plus, Users, CheckCircle2 } from 'lucide-react';
 
 function CreatorDirectoryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Parse state from URL params
+  // Parse states from URL params
   const page = Number(searchParams.get('page')) || 1;
   const limit = 10;
+  const search = searchParams.get('search') || '';
   const niche = searchParams.get('niche') || '';
   const minFollowers = searchParams.get('minFollowers') || '';
   const maxFollowers = searchParams.get('maxFollowers') || '';
@@ -50,6 +52,7 @@ function CreatorDirectoryContent() {
     niche: niche || undefined,
     minFollowers: minFollowers ? Number(minFollowers) : undefined,
     maxFollowers: maxFollowers ? Number(maxFollowers) : undefined,
+    search: search || undefined,
   };
 
   // Queries & Mutations
@@ -61,6 +64,7 @@ function CreatorDirectoryContent() {
 
   // URL Sync handler
   const handleFilterChange = (updates: {
+    search?: string;
     niche?: string;
     minFollowers?: string;
     maxFollowers?: string;
@@ -70,22 +74,28 @@ function CreatorDirectoryContent() {
   }) => {
     const params = new URLSearchParams(searchParams.toString());
 
+    if (updates.search !== undefined) {
+      if (updates.search) params.set('search', updates.search);
+      else params.delete('search');
+      params.set('page', '1'); // reset page on search
+    }
+
     if (updates.niche !== undefined) {
       if (updates.niche) params.set('niche', updates.niche);
       else params.delete('niche');
-      params.set('page', '1');
+      params.set('page', '1'); // reset page on niche change
     }
 
     if (updates.minFollowers !== undefined) {
       if (updates.minFollowers) params.set('minFollowers', updates.minFollowers);
       else params.delete('minFollowers');
-      params.set('page', '1');
+      params.set('page', '1'); // reset page on filter change
     }
 
     if (updates.maxFollowers !== undefined) {
       if (updates.maxFollowers) params.set('maxFollowers', updates.maxFollowers);
       else params.delete('maxFollowers');
-      params.set('page', '1');
+      params.set('page', '1'); // reset page on filter change
     }
 
     if (updates.sortBy !== undefined) {
@@ -178,8 +188,18 @@ function CreatorDirectoryContent() {
         </button>
       </div>
 
+      {/* Summary Stats Dashboard */}
+      <SummaryStats
+        total={creatorsData?.total || 0}
+        totalFollowers={creatorsData?.stats?.totalFollowers || 0}
+        avgEngagement={creatorsData?.stats?.avgEngagement || 0}
+        activeCount={creatorsData?.stats?.activeCount || 0}
+        isLoading={isLoading}
+      />
+
       {/* Filter Bar */}
       <FilterBar
+        search={search}
         niche={niche}
         minFollowers={minFollowers}
         maxFollowers={maxFollowers}
