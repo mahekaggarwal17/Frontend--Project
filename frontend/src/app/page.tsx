@@ -14,7 +14,8 @@ import FilterBar from '../components/FilterBar';
 import CreatorsTable from '../components/CreatorsTable';
 import CreatorModal from '../components/CreatorModal';
 import DeleteModal from '../components/DeleteModal';
-import { Plus, Users, CheckCircle2 } from 'lucide-react';
+import { Plus, Users, CheckCircle2, Download } from 'lucide-react';
+import { fetchCreators } from '../lib/api';
 
 function CreatorDirectoryContent() {
   const router = useRouter();
@@ -152,6 +153,54 @@ function CreatorDirectoryContent() {
     }
   };
 
+  const handleExportCSV = async () => {
+    try {
+      const exportFilters = {
+        ...filters,
+        page: 1,
+        limit: 1000, // Fetch all matching results up to 1000
+      };
+      
+      const response = await fetchCreators(exportFilters);
+      const data = response.data;
+      
+      if (data.length === 0) {
+        triggerNotification('No data available to export.');
+        return;
+      }
+      
+      // Build CSV String
+      const headers = ['ID', 'Name', 'Email', 'Niche', 'Followers', 'Engagement Rate (%)', 'Status', 'Created At'];
+      const rows = data.map(c => [
+        c.id,
+        `"${c.name.replace(/"/g, '""')}"`,
+        c.email,
+        c.niche,
+        c.followerCount,
+        c.engagementRate,
+        c.status,
+        c.createdAt
+      ]);
+      
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      
+      // Download link trigger
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `creators_export_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      triggerNotification('CSV export completed successfully!');
+    } catch (e: any) {
+      alert('Failed to export CSV: ' + e.message);
+    }
+  };
+
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Toast Notification */}
@@ -176,16 +225,26 @@ function CreatorDirectoryContent() {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setSelectedCreator(null);
-            setIsModalOpen(true);
-          }}
-          className="flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition hover:shadow-indigo-600/30 active:scale-98"
-        >
-          <Plus size={18} />
-          <span>Add Creator</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl border border-slate-800 text-slate-350 hover:text-slate-100 hover:bg-slate-800 transition active:scale-98"
+          >
+            <Download size={18} />
+            <span>Export CSV</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedCreator(null);
+              setIsModalOpen(true);
+            }}
+            className="flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition hover:shadow-indigo-600/30 active:scale-98"
+          >
+            <Plus size={18} />
+            <span>Add Creator</span>
+          </button>
+        </div>
       </div>
 
       {/* Summary Stats Dashboard */}
