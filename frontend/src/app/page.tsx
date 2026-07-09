@@ -60,6 +60,31 @@ function CreatorDirectoryContent() {
   // Queries & Mutations
   const { data: creatorsData, isLoading, isError, error, refetch } = useCreatorsQuery(filters);
 
+  // Stats query for client-side aggregations (fetch up to 1000 items matching active filters)
+  const statsFilters = {
+    page: 1,
+    limit: 1000,
+    niche: niche || undefined,
+    minFollowers: minFollowers ? Number(minFollowers) : undefined,
+    maxFollowers: maxFollowers ? Number(maxFollowers) : undefined,
+    search: search || undefined,
+  };
+  const { data: statsData, isLoading: isStatsLoading } = useCreatorsQuery(statsFilters);
+
+  // Client-side calculations
+  const allMatchingCreators = statsData?.data || [];
+  const totalMatchingCount = statsData?.total || 0;
+  const totalFollowers = allMatchingCreators.reduce((sum, c) => sum + c.followerCount, 0);
+  const avgEngagement = allMatchingCreators.length > 0
+    ? Number((allMatchingCreators.reduce((sum, c) => sum + c.engagementRate, 0) / allMatchingCreators.length).toFixed(1))
+    : 0;
+  const activeCount = allMatchingCreators.filter((c) => c.status === 'active').length;
+
+  const nicheCounts = allMatchingCreators.reduce((acc, c) => {
+    acc[c.niche] = (acc[c.niche] || 0) + 1;
+    return acc;
+  }, { beauty: 0, fitness: 0, travel: 0, food: 0, tech: 0, fashion: 0 } as Record<string, number>);
+
   const createMutation = useCreateCreatorMutation(filters);
   const updateMutation = useUpdateCreatorMutation(filters);
   const deleteMutation = useDeleteCreatorMutation(filters);
@@ -250,18 +275,18 @@ function CreatorDirectoryContent() {
 
       {/* Summary Stats Dashboard */}
       <SummaryStats
-        total={creatorsData?.total || 0}
-        totalFollowers={creatorsData?.stats?.totalFollowers || 0}
-        avgEngagement={creatorsData?.stats?.avgEngagement || 0}
-        activeCount={creatorsData?.stats?.activeCount || 0}
-        isLoading={isLoading}
+        total={totalMatchingCount}
+        totalFollowers={totalFollowers}
+        avgEngagement={avgEngagement}
+        activeCount={activeCount}
+        isLoading={isLoading || isStatsLoading}
       />
 
       {/* Niche Category Distribution Chart */}
       <NicheBreakdown
-        nicheCounts={creatorsData?.stats?.nicheCounts}
-        total={creatorsData?.total || 0}
-        isLoading={isLoading}
+        nicheCounts={nicheCounts}
+        total={totalMatchingCount}
+        isLoading={isLoading || isStatsLoading}
       />
 
       {/* Filter Bar */}
