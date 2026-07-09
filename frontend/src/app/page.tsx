@@ -240,8 +240,8 @@ function CreatorDirectoryContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-900 pb-6">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-100 flex items-center gap-3">
-            <span className="p-2 rounded-xl bg-indigo-950 border border-indigo-500/20 text-indigo-400">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-100 flex items-center gap-3 font-display">
+            <span className="p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
               <Users size={28} />
             </span>
             Creator Directory
@@ -254,7 +254,7 @@ function CreatorDirectoryContent() {
         <div className="flex items-center gap-3">
           <button
             onClick={handleExportCSV}
-            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl border border-slate-800 text-slate-350 hover:text-slate-100 hover:bg-slate-800 transition active:scale-98"
+            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-xl border border-slate-800 bg-slate-900/10 text-slate-350 hover:border-[#BBF351]/50 hover:text-[#BBF351] hover:shadow-[0_0_15px_rgba(187,243,81,0.15)] hover:bg-[#BBF351]/5 transition-all duration-300 cursor-pointer"
           >
             <Download size={18} />
             <span>Export CSV</span>
@@ -265,7 +265,7 @@ function CreatorDirectoryContent() {
               setSelectedCreator(null);
               setIsModalOpen(true);
             }}
-            className="flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition hover:shadow-indigo-600/30 active:scale-98"
+            className="flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl bg-slate-900 border border-[#00BCFF]/50 text-[#00BCFF] shadow-[0_0_15px_rgba(0,188,255,0.15)] hover:bg-[#00BCFF] hover:text-slate-950 transition-all duration-300 cursor-pointer"
           >
             <Plus size={18} />
             <span>Add Creator</span>
