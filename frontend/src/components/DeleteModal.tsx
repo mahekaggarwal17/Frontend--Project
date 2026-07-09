@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -18,11 +19,14 @@ export default function DeleteModal({
   creatorName,
   isDeleting,
 }: DeleteModalProps) {
+  const modalRef = useFocusTrap(isOpen, onClose);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
       <div 
+        ref={modalRef}
         className="w-full max-w-md border bg-slate-900 border-slate-800 rounded-2xl shadow-2xl shadow-red-950/10 animate-scale-up"
         role="dialog"
         aria-modal="true"

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Creator, Niche } from '../types';
 import { X } from 'lucide-react';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface CreatorModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function CreatorModal({
   creator,
   isSubmitting,
 }: CreatorModalProps) {
+  const modalRef = useFocusTrap(isOpen, onClose);
   const [name, setName] = useState('');
   const [niche, setNiche] = useState<Niche>('tech');
   const [followerCount, setFollowerCount] = useState<number | ''>('');
@@ -101,6 +103,7 @@ export default function CreatorModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
       <div 
+        ref={modalRef}
         className="w-full max-w-lg overflow-hidden border bg-slate-900 border-slate-800 rounded-2xl shadow-2xl shadow-indigo-500/10 animate-scale-up"
         role="dialog"
         aria-modal="true"
