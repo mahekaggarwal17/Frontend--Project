@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Creator, Niche } from '../types';
-import { X } from 'lucide-react';
+import { X, User, Mail, Tag, Activity, Users, Zap } from 'lucide-react';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface CreatorModalProps {
@@ -14,14 +14,38 @@ interface CreatorModalProps {
 }
 
 const NICHES: Niche[] = ['beauty', 'fitness', 'travel', 'food', 'tech', 'fashion'];
+const NICHE_COLORS: Record<Niche, string> = {
+  beauty: '#f472b6', fitness: '#34d399', travel: '#2dd4bf',
+  food: '#fbbf24', tech: '#818cf8', fashion: '#c084fc',
+};
 
-export default function CreatorModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  creator,
-  isSubmitting,
-}: CreatorModalProps) {
+function Field({
+  id, label, icon: Icon, error, children,
+}: {
+  id: string; label: string; icon: React.ElementType; error?: string; children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label htmlFor={id} className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <Icon size={11} className="text-slate-600" />
+        {label}
+      </label>
+      {children}
+      {error && (
+        <p className="text-[11px] text-red-400 flex items-center gap-1">
+          <span className="w-1 h-1 rounded-full bg-red-400 inline-block" />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+const INPUT_BASE = 'w-full px-4 py-2.5 rounded-xl border bg-slate-950/60 text-slate-100 placeholder-slate-600 text-sm outline-none transition-all duration-300';
+const INPUT_NORMAL = `${INPUT_BASE} border-slate-800/80 focus:border-[#00BCFF]/50 focus:shadow-[0_0_14px_rgba(0,188,255,0.10)] focus:bg-slate-950/80`;
+const INPUT_ERROR  = `${INPUT_BASE} border-red-500/50 focus:border-red-500/70 focus:shadow-[0_0_12px_rgba(239,68,68,0.10)]`;
+
+export default function CreatorModal({ isOpen, onClose, onSubmit, creator, isSubmitting }: CreatorModalProps) {
   const modalRef = useFocusTrap(isOpen, onClose);
   const [name, setName] = useState('');
   const [niche, setNiche] = useState<Niche>('tech');
@@ -29,24 +53,16 @@ export default function CreatorModal({
   const [engagementRate, setEngagementRate] = useState<number | ''>('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (creator) {
-      setName(creator.name);
-      setNiche(creator.niche);
-      setFollowerCount(creator.followerCount);
-      setEngagementRate(creator.engagementRate);
-      setEmail(creator.email);
-      setStatus(creator.status);
+      setName(creator.name); setNiche(creator.niche);
+      setFollowerCount(creator.followerCount); setEngagementRate(creator.engagementRate);
+      setEmail(creator.email); setStatus(creator.status);
     } else {
-      setName('');
-      setNiche('tech');
-      setFollowerCount('');
-      setEngagementRate('');
-      setEmail('');
-      setStatus('active');
+      setName(''); setNiche('tech'); setFollowerCount('');
+      setEngagementRate(''); setEmail(''); setStatus('active');
     }
     setErrors({});
   }, [creator, isOpen]);
@@ -54,224 +70,152 @@ export default function CreatorModal({
   if (!isOpen) return null;
 
   const validate = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!niche) {
-      newErrors.niche = 'Niche is required';
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!emailRegex.test(email)) {
-      newErrors.email = 'Invalid email address';
-    }
-
-    if (followerCount !== '' && Number(followerCount) < 0) {
-      newErrors.followerCount = 'Follower count must be non-negative';
-    }
-
+    const e: Record<string, string> = {};
+    if (!name.trim()) e.name = 'Name is required';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = email ? 'Invalid email address' : 'Email is required';
+    if (followerCount !== '' && Number(followerCount) < 0) e.followerCount = 'Must be non-negative';
     if (engagementRate !== '') {
-      const rate = Number(engagementRate);
-      if (rate < 0 || rate > 100) {
-        newErrors.engagementRate = 'Engagement rate must be between 0% and 100%';
-      }
+      const r = Number(engagementRate);
+      if (r < 0 || r > 100) e.engagementRate = 'Must be between 0–100%';
     }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-
     onSubmit({
-      name: name.trim(),
-      niche,
+      name: name.trim(), niche,
       followerCount: followerCount === '' ? 0 : Number(followerCount),
       engagementRate: engagementRate === '' ? 0 : Number(Number(engagementRate).toFixed(1)),
-      email: email.trim(),
-      status,
+      email: email.trim(), status,
     });
   };
 
+  const isEdit = !!creator;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fade-in">
-      <div 
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
+      <div
         ref={modalRef}
-        className="w-full max-w-lg overflow-hidden border border-slate-800/60 bg-slate-900/70 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-indigo-500/20 animate-scale-up"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
+        className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/80 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.6)] animate-scale-up"
+        role="dialog" aria-modal="true" aria-labelledby="modal-title"
       >
+        {/* Neon top accent */}
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-[#00BCFF]/60 to-transparent" />
+
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/60">
-          <h2 id="modal-title" className="text-xl font-semibold text-slate-100">
-            {creator ? 'Edit Creator Profile' : 'Add New Creator'}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded-lg bg-[#00BCFF]/10 border border-[#00BCFF]/20">
+              <Zap size={14} className="text-[#00BCFF]" />
+            </div>
+            <div>
+              <h2 id="modal-title" className="text-base font-bold text-slate-100 font-display">
+                {isEdit ? 'Edit Creator' : 'Add Creator'}
+              </h2>
+              <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+                {isEdit ? `Editing ${creator?.name}` : 'New profile'}
+              </p>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800/60 transition-all duration-200 cursor-pointer"
             aria-label="Close dialog"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Name */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="creator-name">
-              Name *
-            </label>
-            <input
-              id="creator-name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={`w-full px-4 py-2.5 rounded-lg border bg-slate-950/50 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 transition ${
-                errors.name 
-                  ? 'border-red-500/50 focus:ring-red-500/30' 
-                  : 'border-slate-800 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-              }`}
-              placeholder="e.g. Priya Sharma"
-            />
-            {errors.name && (
-              <p className="mt-1 text-xs text-red-400">{errors.name}</p>
-            )}
-          </div>
+          <Field id="creator-name" label="Full Name" icon={User} error={errors.name}>
+            <input id="creator-name" type="text" value={name} onChange={(e) => setName(e.target.value)}
+              className={errors.name ? INPUT_ERROR : INPUT_NORMAL} placeholder="e.g. Priya Sharma" />
+          </Field>
 
           {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="creator-email">
-              Email Address *
-            </label>
-            <input
-              id="creator-email"
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-4 py-2.5 rounded-lg border bg-slate-950/50 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 transition ${
-                errors.email 
-                  ? 'border-red-500/50 focus:ring-red-500/30' 
-                  : 'border-slate-800 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-              }`}
-              placeholder="e.g. priya@example.com"
-            />
-            {errors.email && (
-              <p className="mt-1 text-xs text-red-400">{errors.email}</p>
-            )}
-          </div>
+          <Field id="creator-email" label="Email Address" icon={Mail} error={errors.email}>
+            <input id="creator-email" type="text" value={email} onChange={(e) => setEmail(e.target.value)}
+              className={errors.email ? INPUT_ERROR : INPUT_NORMAL} placeholder="e.g. priya@example.com" />
+          </Field>
 
-          {/* Row: Niche & Status */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="creator-niche">
-                Niche *
-              </label>
-              <select
-                id="creator-niche"
-                value={niche}
-                onChange={(e) => setNiche(e.target.value as Niche)}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-800 bg-slate-950 text-slate-100 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition capitalize"
-              >
-                {NICHES.map((n) => (
-                  <option key={n} value={n}>
+          {/* Niche pills */}
+          <Field id="creator-niche" label="Niche" icon={Tag} error={errors.niche}>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {NICHES.map((n) => {
+                const active = niche === n;
+                const color = NICHE_COLORS[n];
+                return (
+                  <button
+                    key={n} type="button" onClick={() => setNiche(n)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-semibold capitalize border transition-all duration-200 cursor-pointer"
+                    style={{
+                      color: active ? color : '#64748b',
+                      borderColor: active ? `${color}50` : 'rgba(51,65,85,0.7)',
+                      background: active ? `${color}12` : 'transparent',
+                      boxShadow: active ? `0 0 10px ${color}20` : 'none',
+                    }}
+                  >
                     {n}
-                  </option>
-                ))}
-              </select>
+                  </button>
+                );
+              })}
             </div>
+          </Field>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="creator-status">
-                Status
-              </label>
-              <select
-                id="creator-status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-800 bg-slate-950 text-slate-100 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Row: Followers & Engagement Rate */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="creator-followers">
-                Follower Count
-              </label>
-              <input
-                id="creator-followers"
-                type="number"
-                value={followerCount}
+          {/* Followers + Engagement */}
+          <div className="grid grid-cols-2 gap-4">
+            <Field id="creator-followers" label="Followers" icon={Users} error={errors.followerCount}>
+              <input id="creator-followers" type="number" value={followerCount}
                 onChange={(e) => setFollowerCount(e.target.value === '' ? '' : Number(e.target.value))}
-                className={`w-full px-4 py-2.5 rounded-lg border bg-slate-950/50 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 transition ${
-                  errors.followerCount
-                    ? 'border-red-500/50 focus:ring-red-500/30'
-                    : 'border-slate-800 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-                }`}
-                placeholder="e.g. 45200"
-              />
-              {errors.followerCount && (
-                <p className="mt-1 text-xs text-red-400">{errors.followerCount}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="creator-engagement">
-                Engagement Rate (%)
-              </label>
-              <input
-                id="creator-engagement"
-                type="number"
-                step="0.1"
-                value={engagementRate}
+                className={errors.followerCount ? INPUT_ERROR : INPUT_NORMAL} placeholder="e.g. 45200" />
+            </Field>
+            <Field id="creator-engagement" label="Engagement %" icon={Activity} error={errors.engagementRate}>
+              <input id="creator-engagement" type="number" step="0.1" value={engagementRate}
                 onChange={(e) => setEngagementRate(e.target.value === '' ? '' : Number(e.target.value))}
-                className={`w-full px-4 py-2.5 rounded-lg border bg-slate-950/50 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 transition ${
-                  errors.engagementRate
-                    ? 'border-red-500/50 focus:ring-red-500/30'
-                    : 'border-slate-800 focus:border-indigo-500/50 focus:ring-indigo-500/20'
-                }`}
-                placeholder="e.g. 3.8"
-              />
-              {errors.engagementRate && (
-                <p className="mt-1 text-xs text-red-400">{errors.engagementRate}</p>
-              )}
-            </div>
+                className={errors.engagementRate ? INPUT_ERROR : INPUT_NORMAL} placeholder="e.g. 3.8" />
+            </Field>
           </div>
 
-          {/* Footer Actions */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-800/60">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2.5 text-sm font-medium rounded-xl text-slate-350 hover:text-slate-100 hover:bg-slate-800/60 transition cursor-pointer"
-              disabled={isSubmitting}
-            >
+          {/* Status toggle */}
+          <Field id="creator-status" label="Status" icon={Activity}>
+            <div className="flex gap-2 pt-1">
+              {(['active', 'inactive'] as const).map((s) => (
+                <button
+                  key={s} type="button" onClick={() => setStatus(s)}
+                  className={`flex-1 py-2 rounded-xl text-sm font-semibold border capitalize transition-all duration-200 cursor-pointer ${
+                    status === s
+                      ? s === 'active'
+                        ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.12)]'
+                        : 'bg-slate-800/60 border-slate-700/60 text-slate-300'
+                      : 'bg-transparent border-slate-800/60 text-slate-600 hover:border-slate-700 hover:text-slate-400'
+                  }`}
+                >
+                  {s === 'active' && <span className="mr-1.5">●</span>}
+                  {s}
+                </button>
+              ))}
+            </div>
+          </Field>
+
+          {/* Footer actions */}
+          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800/60">
+            <button type="button" onClick={onClose} disabled={isSubmitting}
+              className="px-4 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-all duration-200 cursor-pointer">
               Cancel
             </button>
             <button
-              type="submit"
-              className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-650/20 focus:outline-none transition flex items-center justify-center min-w-[120px] cursor-pointer"
-              disabled={isSubmitting}
+              type="submit" disabled={isSubmitting}
+              className="relative px-6 py-2.5 text-sm font-semibold rounded-xl border border-[#00BCFF]/50 text-[#00BCFF] bg-[#00BCFF]/5 hover:bg-[#00BCFF]/15 hover:border-[#00BCFF]/80 hover:shadow-[0_0_20px_rgba(0,188,255,0.25)] transition-all duration-300 min-w-[130px] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (
-                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-              ) : creator ? (
-                'Save Changes'
+                <span className="w-4 h-4 border-2 border-[#00BCFF]/30 border-t-[#00BCFF] rounded-full animate-spin" />
               ) : (
-                'Create Creator'
+                <>{isEdit ? 'Save Changes' : 'Create Creator'}</>
               )}
             </button>
           </div>

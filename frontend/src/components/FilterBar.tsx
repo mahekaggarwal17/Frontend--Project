@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Niche } from '../types';
-import { Search, RotateCcw } from 'lucide-react';
+import { Search, RotateCcw, SlidersHorizontal, ChevronDown } from 'lucide-react';
 
 interface FilterBarProps {
   search: string;
@@ -15,107 +15,140 @@ interface FilterBarProps {
 
 const NICHES: Niche[] = ['beauty', 'fitness', 'travel', 'food', 'tech', 'fashion'];
 
+const NICHE_COLORS: Record<string, string> = {
+  beauty: '#f472b6',
+  fitness: '#34d399',
+  travel: '#2dd4bf',
+  food: '#fbbf24',
+  tech: '#818cf8',
+  fashion: '#c084fc',
+};
+
 export default function FilterBar({
-  search,
-  niche,
-  minFollowers,
-  maxFollowers,
-  onChange,
-  onClear,
+  search, niche, minFollowers, maxFollowers, onChange, onClear,
 }: FilterBarProps) {
-  // Local states for inputs to avoid immediate layout lag (and allow standard typing)
   const [localSearch, setLocalSearch] = useState(search);
   const [localMin, setLocalMin] = useState(minFollowers);
   const [localMax, setLocalMax] = useState(maxFollowers);
+  const [searchFocused, setSearchFocused] = useState(false);
 
-  useEffect(() => {
-    setLocalSearch(search);
-  }, [search]);
+  useEffect(() => { setLocalSearch(search); }, [search]);
+  useEffect(() => { setLocalMin(minFollowers); }, [minFollowers]);
+  useEffect(() => { setLocalMax(maxFollowers); }, [maxFollowers]);
 
-  useEffect(() => {
-    setLocalMin(minFollowers);
-  }, [minFollowers]);
-
-  useEffect(() => {
-    setLocalMax(maxFollowers);
-  }, [maxFollowers]);
-
-  // Debounce helper
   useEffect(() => {
     const handler = setTimeout(() => {
       const updates: { search?: string; minFollowers?: string; maxFollowers?: string } = {};
       let hasUpdates = false;
-
-      if (localSearch !== search) {
-        updates.search = localSearch;
-        hasUpdates = true;
-      }
-      if (localMin !== minFollowers) {
-        updates.minFollowers = localMin;
-        hasUpdates = true;
-      }
-      if (localMax !== maxFollowers) {
-        updates.maxFollowers = localMax;
-        hasUpdates = true;
-      }
-
-      if (hasUpdates) {
-        onChange(updates);
-      }
+      if (localSearch !== search) { updates.search = localSearch; hasUpdates = true; }
+      if (localMin !== minFollowers) { updates.minFollowers = localMin; hasUpdates = true; }
+      if (localMax !== maxFollowers) { updates.maxFollowers = localMax; hasUpdates = true; }
+      if (hasUpdates) onChange(updates);
     }, 400);
-
     return () => clearTimeout(handler);
   }, [localSearch, localMin, localMax, search, minFollowers, maxFollowers, onChange]);
 
+  const hasActiveFilters = search || niche || minFollowers || maxFollowers;
+
   return (
-    <div className="p-5 border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl rounded-2xl space-y-4 shadow-lg shadow-indigo-500/2">
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-        {/* Search Input */}
-        <div className="w-full lg:w-1/3">
-          <label htmlFor="search-filter" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-            Search Creators
-          </label>
-          <div className="relative">
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-            <input
-              id="search-filter"
-              type="text"
-              value={localSearch}
-              onChange={(e) => setLocalSearch(e.target.value)}
-              placeholder="Search by name or email..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition"
-            />
-          </div>
+    <div className="relative overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl shadow-xl">
+      {/* Neon top accent when any filter active */}
+      <div
+        className={`h-[2px] w-full transition-all duration-500 ${
+          hasActiveFilters
+            ? 'bg-gradient-to-r from-transparent via-[#00BCFF]/60 to-transparent'
+            : 'bg-gradient-to-r from-transparent via-slate-800/80 to-transparent'
+        }`}
+      />
+
+      <div className="p-5 space-y-5">
+        {/* Top row label */}
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal size={14} className="text-slate-500" />
+          <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Filter Creators
+          </span>
+          {hasActiveFilters && (
+            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#00BCFF]/15 border border-[#00BCFF]/25 text-[9px] font-mono font-bold text-[#00BCFF] animate-fade-in">
+              ACTIVE
+            </span>
+          )}
         </div>
 
-        {/* Niche Selector */}
-        <div className="w-full lg:w-1/4">
-          <label htmlFor="niche-filter" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-            Niche / Category
-          </label>
-          <select
-            id="niche-filter"
-            value={niche}
-            onChange={(e) => onChange({ niche: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition capitalize"
-          >
-            <option value="" className="bg-slate-950">All Niches</option>
-            {NICHES.map((n) => (
-              <option key={n} value={n} className="bg-slate-950">
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Follower Range Filter */}
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="min-followers" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Min Followers
+        <div className="flex flex-col lg:flex-row lg:items-end gap-4">
+          {/* Search Input */}
+          <div className="w-full lg:w-1/3">
+            <label htmlFor="search-filter" className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              Search
             </label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm">Min:</span>
+            <div className={`relative transition-all duration-300 ${searchFocused ? 'scale-[1.01]' : ''}`}>
+              <Search
+                size={16}
+                className={`absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-300 ${
+                  searchFocused ? 'text-[#00BCFF]' : 'text-slate-500'
+                }`}
+              />
+              <input
+                id="search-filter"
+                type="text"
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                placeholder="Name or email…"
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-slate-950/50 text-slate-200 placeholder-slate-600 text-sm outline-none transition-all duration-300 ${
+                  searchFocused
+                    ? 'border-[#00BCFF]/50 shadow-[0_0_16px_rgba(0,188,255,0.12)] bg-slate-950/70'
+                    : 'border-slate-800/80 hover:border-slate-700/80'
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Niche Pills */}
+          <div className="w-full lg:w-auto flex-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              Niche
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => onChange({ niche: '' })}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 cursor-pointer ${
+                  !niche
+                    ? 'bg-slate-700/60 border-slate-600/80 text-slate-100'
+                    : 'bg-transparent border-slate-800/60 text-slate-500 hover:border-slate-700 hover:text-slate-300'
+                }`}
+              >
+                All
+              </button>
+              {NICHES.map((n) => {
+                const color = NICHE_COLORS[n];
+                const active = niche === n;
+                return (
+                  <button
+                    key={n}
+                    onClick={() => onChange({ niche: active ? '' : n })}
+                    className="relative px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 capitalize cursor-pointer overflow-hidden"
+                    style={{
+                      borderColor: active ? `${color}60` : 'rgba(51,65,85,0.6)',
+                      color: active ? color : '#64748b',
+                      background: active ? `${color}12` : 'transparent',
+                      boxShadow: active ? `0 0 12px ${color}20` : 'none',
+                    }}
+                  >
+                    {n}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Follower Range */}
+          <div className="flex items-end gap-2 shrink-0">
+            <div>
+              <label htmlFor="min-followers" className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                Min Followers
+              </label>
               <input
                 id="min-followers"
                 type="number"
@@ -123,38 +156,36 @@ export default function FilterBar({
                 value={localMin}
                 onChange={(e) => setLocalMin(e.target.value)}
                 placeholder="0"
-                className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 placeholder-slate-650 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition"
+                className="w-28 px-3 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/50 text-slate-200 placeholder-slate-600 text-sm outline-none focus:border-[#BBF351]/40 focus:shadow-[0_0_12px_rgba(187,243,81,0.10)] transition-all duration-300"
               />
             </div>
-          </div>
-
-          <div>
-            <label htmlFor="max-followers" className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Max Followers
-            </label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm">Max:</span>
+            <div className="pb-2.5 text-slate-600 text-lg font-light">–</div>
+            <div>
+              <label htmlFor="max-followers" className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+                Max Followers
+              </label>
               <input
                 id="max-followers"
                 type="number"
                 min="0"
                 value={localMax}
                 onChange={(e) => setLocalMax(e.target.value)}
-                placeholder="e.g. 5000000"
-                className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 placeholder-slate-650 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition"
+                placeholder="Any"
+                className="w-28 px-3 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/50 text-slate-200 placeholder-slate-600 text-sm outline-none focus:border-[#BBF351]/40 focus:shadow-[0_0_12px_rgba(187,243,81,0.10)] transition-all duration-300"
               />
             </div>
           </div>
-        </div>
 
-        {/* Reset Filters */}
-        <div className="flex items-center gap-2">
+          {/* Reset */}
           <button
             onClick={onClear}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-800 bg-slate-900/20 text-slate-350 hover:text-slate-100 hover:bg-slate-800/40 transition active:scale-95 cursor-pointer"
-            title="Reset all filters"
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer shrink-0 ${
+              hasActiveFilters
+                ? 'border-red-500/30 bg-red-950/20 text-red-400 hover:border-red-500/60 hover:bg-red-950/40 hover:shadow-[0_0_14px_rgba(239,68,68,0.12)]'
+                : 'border-slate-800/60 bg-slate-900/10 text-slate-600 hover:border-slate-700 hover:text-slate-400'
+            }`}
           >
-            <RotateCcw size={16} />
+            <RotateCcw size={14} className={hasActiveFilters ? 'animate-spin-once' : ''} />
             <span>Reset</span>
           </button>
         </div>
