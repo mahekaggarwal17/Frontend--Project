@@ -17,6 +17,8 @@ import CreatorModal from '../components/CreatorModal';
 import DeleteModal from '../components/DeleteModal';
 import { Plus, CheckCircle2, Download } from 'lucide-react';
 import { fetchCreators } from '../lib/api';
+import HeroStats from '../components/HeroStats';
+import TickerStrip from '../components/TickerStrip';
 
 function CreatorDirectoryContent() {
   const router = useRouter();
@@ -274,6 +276,15 @@ function CreatorDirectoryContent() {
           </button>
         </div>
       </div>
+
+      {/* Divider */}
+      <div className="h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent" />
+
+      {/* Monk-E style hero stat counters with corner brackets */}
+      <HeroStats />
+
+      {/* Platform ticker strip — infinite marquee */}
+      <TickerStrip label="Live Platforms" />
 
       {/* Divider */}
       <div className="h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent" />
