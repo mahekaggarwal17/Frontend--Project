@@ -24,10 +24,10 @@ export default function DeleteModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fade-in">
       <div 
         ref={modalRef}
-        className="w-full max-w-md border bg-slate-900 border-slate-800 rounded-2xl shadow-2xl shadow-red-950/10 animate-scale-up"
+        className="w-full max-w-md border border-slate-800/60 bg-slate-900/70 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-red-950/10 animate-scale-up"
         role="dialog"
         aria-modal="true"
         aria-labelledby="delete-modal-title"
@@ -48,18 +48,18 @@ export default function DeleteModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition cursor-pointer"
             aria-label="Close dialog"
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="flex items-center justify-end space-x-3 px-6 py-4 bg-slate-950/30 border-t border-slate-850 rounded-b-2xl">
+        <div className="flex items-center justify-end space-x-3 px-6 py-4 bg-slate-950/40 border-t border-slate-800/65 rounded-b-2xl">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition"
+            className="px-4 py-2.5 text-sm font-medium rounded-xl text-slate-350 hover:text-slate-100 hover:bg-slate-800/60 transition cursor-pointer"
             disabled={isDeleting}
           >
             Cancel
@@ -67,7 +67,7 @@ export default function DeleteModal({
           <button
             type="button"
             onClick={onConfirm}
-            className="px-5 py-2 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/20 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition flex items-center justify-center min-w-[80px]"
+            className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/20 focus:outline-none transition flex items-center justify-center min-w-[100px] cursor-pointer"
             disabled={isDeleting}
           >
             {isDeleting ? (

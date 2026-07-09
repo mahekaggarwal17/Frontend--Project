@@ -68,7 +68,7 @@ export default function FilterBar({
   }, [localSearch, localMin, localMax, search, minFollowers, maxFollowers, onChange]);
 
   return (
-    <div className="p-5 border border-slate-800 bg-slate-900/50 backdrop-blur-md rounded-2xl space-y-4">
+    <div className="p-5 border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl rounded-2xl space-y-4 shadow-lg shadow-indigo-500/2">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         {/* Search Input */}
         <div className="w-full lg:w-1/3">
@@ -83,7 +83,7 @@ export default function FilterBar({
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
               placeholder="Search by name or email..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/50 text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition"
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition"
             />
           </div>
         </div>
@@ -97,11 +97,11 @@ export default function FilterBar({
             id="niche-filter"
             value={niche}
             onChange={(e) => onChange({ niche: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-200 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition capitalize"
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition capitalize"
           >
-            <option value="">All Niches</option>
+            <option value="" className="bg-slate-950">All Niches</option>
             {NICHES.map((n) => (
-              <option key={n} value={n}>
+              <option key={n} value={n} className="bg-slate-950">
                 {n}
               </option>
             ))}
@@ -123,7 +123,7 @@ export default function FilterBar({
                 value={localMin}
                 onChange={(e) => setLocalMin(e.target.value)}
                 placeholder="0"
-                className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/50 text-slate-200 placeholder-slate-650 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition"
+                className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 placeholder-slate-650 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function FilterBar({
                 value={localMax}
                 onChange={(e) => setLocalMax(e.target.value)}
                 placeholder="e.g. 5000000"
-                className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-800 bg-slate-950/50 text-slate-200 placeholder-slate-650 focus:outline-none focus:ring-2 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition"
+                className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/40 text-slate-200 placeholder-slate-650 focus:outline-none focus:ring-2 focus:border-indigo-500/40 focus:ring-indigo-500/10 transition"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function FilterBar({
         <div className="flex items-center gap-2">
           <button
             onClick={onClear}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-800 text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition active:scale-95"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-800 bg-slate-900/20 text-slate-350 hover:text-slate-100 hover:bg-slate-800/40 transition active:scale-95 cursor-pointer"
             title="Reset all filters"
           >
             <RotateCcw size={16} />

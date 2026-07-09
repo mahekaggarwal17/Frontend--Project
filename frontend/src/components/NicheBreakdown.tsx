@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Niche } from '../types';
 import { BarChart3 } from 'lucide-react';
+import gsap from 'gsap';
 
 interface NicheBreakdownProps {
   nicheCounts?: Record<Niche, number>;
@@ -20,9 +21,32 @@ const NICHE_COLORS: Record<Niche, { bar: string; text: string; bg: string }> = {
 };
 
 export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheBreakdownProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isLoading || !nicheCounts || !gridRef.current) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const items = gridRef.current.children;
+    gsap.fromTo(
+      items,
+      { opacity: 0, y: 12 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: 'power3.out',
+        overwrite: 'auto',
+      }
+    );
+  }, [isLoading, nicheCounts]);
+
   if (isLoading || !nicheCounts) {
     return (
-      <div className="p-6 border border-slate-800 bg-slate-900/30 rounded-2xl animate-pulse space-y-4">
+      <div className="p-6 border border-slate-800 bg-slate-900/20 backdrop-blur-xl rounded-2xl animate-pulse space-y-4">
         <div className="h-4 bg-slate-800 rounded w-1/3"></div>
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
@@ -48,28 +72,31 @@ export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheB
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div className="p-6 border border-slate-800 bg-slate-900/30 rounded-2xl space-y-4 backdrop-blur-md shadow-lg">
-      <div className="flex items-center gap-2 border-b border-slate-850 pb-3">
+    <div className="p-6 border border-slate-800/60 bg-slate-900/20 rounded-2xl space-y-4 backdrop-blur-xl shadow-lg shadow-indigo-500/2">
+      <div className="flex items-center gap-2 border-b border-slate-800/60 pb-3">
         <BarChart3 size={18} className="text-indigo-400" />
-        <h3 className="text-sm font-semibold tracking-wider uppercase text-slate-350">
+        <h3 className="text-sm font-semibold tracking-wider uppercase text-slate-400">
           Category Distribution
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+      <div 
+        ref={gridRef}
+        className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"
+      >
         {sortedNiches.map(({ niche, count, percentage }) => {
           const colors = NICHE_COLORS[niche];
           return (
-            <div key={niche} className="space-y-1.5 select-none">
+            <div key={niche} className="space-y-1.5 select-none group">
               <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="capitalize text-slate-300">{niche}</span>
-                <span className="text-slate-400">
-                  {count} <span className="text-slate-650 font-normal">({percentage}%)</span>
+                <span className="capitalize text-slate-300 group-hover:text-slate-200 transition-colors duration-200">{niche}</span>
+                <span className="text-slate-400 group-hover:text-slate-350 transition-colors duration-200">
+                  {count} <span className="text-slate-600 font-normal">({percentage}%)</span>
                 </span>
               </div>
-              <div className="h-2 w-full rounded-full bg-slate-950 overflow-hidden border border-slate-900/50">
+              <div className="h-2.5 w-full rounded-full bg-slate-950/80 overflow-hidden border border-slate-900/50 p-0.5">
                 <div
-                  className={`h-full rounded-full ${colors.bar} transition-all duration-500`}
+                  className={`h-full rounded-full ${colors.bar} transition-all duration-700 ease-out`}
                   style={{ width: `${percentage}%` }}
                 />
               </div>

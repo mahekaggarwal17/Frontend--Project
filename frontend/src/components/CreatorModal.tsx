@@ -101,22 +101,22 @@ export default function CreatorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fade-in">
       <div 
         ref={modalRef}
-        className="w-full max-w-lg overflow-hidden border bg-slate-900 border-slate-800 rounded-2xl shadow-2xl shadow-indigo-500/10 animate-scale-up"
+        className="w-full max-w-lg overflow-hidden border border-slate-800/60 bg-slate-900/70 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-indigo-500/20 animate-scale-up"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/60">
           <h2 id="modal-title" className="text-xl font-semibold text-slate-100">
             {creator ? 'Edit Creator Profile' : 'Add New Creator'}
           </h2>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition cursor-pointer"
             aria-label="Close dialog"
           >
             <X size={20} />
@@ -252,18 +252,18 @@ export default function CreatorModal({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-800/60">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium rounded-lg text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition"
+              className="px-4 py-2.5 text-sm font-medium rounded-xl text-slate-350 hover:text-slate-100 hover:bg-slate-800/60 transition cursor-pointer"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 text-sm font-medium rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition flex items-center justify-center min-w-[80px]"
+              className="px-5 py-2.5 text-sm font-semibold rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-650/20 focus:outline-none transition flex items-center justify-center min-w-[120px] cursor-pointer"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
