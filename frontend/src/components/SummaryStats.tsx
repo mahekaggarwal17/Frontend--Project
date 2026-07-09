@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useRef, useEffect } from 'react';
 import { Users, Eye, Activity, Award, TrendingUp } from 'lucide-react';
@@ -104,10 +104,10 @@ export default function SummaryStats({
   }, [isLoading]);
 
   const values = [
-    isLoading ? '—' : total.toString(),
-    isLoading ? '—' : formatNumber(totalFollowers),
-    isLoading ? '—' : `${avgEngagement}%`,
-    isLoading ? '—' : `${activeCount} / ${total}`,
+    isLoading ? 'ΓÇö' : total.toString(),
+    isLoading ? 'ΓÇö' : formatNumber(totalFollowers),
+    isLoading ? 'ΓÇö' : `${avgEngagement}%`,
+    isLoading ? 'ΓÇö' : `${activeCount} / ${total}`,
   ];
 
   return (
