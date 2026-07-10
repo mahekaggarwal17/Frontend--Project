@@ -51,7 +51,7 @@ export default function FilterBar({
   const hasActiveFilters = search || niche || minFollowers || maxFollowers;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl shadow-xl">
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/20 shadow-sm">
       {/* Neon top accent when any filter active */}
       <div
         className={`h-[2px] w-full transition-all duration-500 ${
@@ -113,10 +113,10 @@ export default function FilterBar({
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => onChange({ niche: '' })}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 cursor-pointer ${
                   !niche
-                    ? 'bg-slate-700/60 border-slate-600/80 text-slate-100'
-                    : 'bg-transparent border-slate-800/60 text-slate-500 hover:border-slate-700 hover:text-slate-300'
+                    ? 'bg-zinc-800 border-zinc-700 text-zinc-100'
+                    : 'bg-transparent border-zinc-800/60 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
                 }`}
               >
                 All
@@ -128,12 +128,11 @@ export default function FilterBar({
                   <button
                     key={n}
                     onClick={() => onChange({ niche: active ? '' : n })}
-                    className="relative px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 capitalize cursor-pointer overflow-hidden"
+                    className="relative px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 capitalize cursor-pointer overflow-hidden"
                     style={{
-                      borderColor: active ? `${color}60` : 'rgba(51,65,85,0.6)',
-                      color: active ? color : '#64748b',
+                      borderColor: active ? `${color}40` : '#27272a',
+                      color: active ? color : '#71717a',
                       background: active ? `${color}12` : 'transparent',
-                      boxShadow: active ? `0 0 12px ${color}20` : 'none',
                     }}
                   >
                     {n}
@@ -156,7 +155,7 @@ export default function FilterBar({
                 value={localMin}
                 onChange={(e) => setLocalMin(e.target.value)}
                 placeholder="0"
-                className="w-28 px-3 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/50 text-slate-200 placeholder-slate-600 text-sm outline-none focus:border-[#BBF351]/40 focus:shadow-[0_0_12px_rgba(187,243,81,0.10)] transition-all duration-300"
+                className="w-28 px-3 py-2.5 rounded-xl border border-zinc-800 bg-zinc-950/50 text-zinc-200 placeholder-zinc-600 text-sm outline-none focus:border-blue-500/40 transition-all duration-150"
               />
             </div>
             <div className="pb-2.5 text-slate-600 text-lg font-light">–</div>
@@ -171,7 +170,7 @@ export default function FilterBar({
                 value={localMax}
                 onChange={(e) => setLocalMax(e.target.value)}
                 placeholder="Any"
-                className="w-28 px-3 py-2.5 rounded-xl border border-slate-800/80 bg-slate-950/50 text-slate-200 placeholder-slate-600 text-sm outline-none focus:border-[#BBF351]/40 focus:shadow-[0_0_12px_rgba(187,243,81,0.10)] transition-all duration-300"
+                className="w-28 px-3 py-2.5 rounded-xl border border-zinc-800 bg-zinc-950/50 text-zinc-200 placeholder-zinc-600 text-sm outline-none focus:border-blue-500/40 transition-all duration-150"
               />
             </div>
           </div>
@@ -179,10 +178,10 @@ export default function FilterBar({
           {/* Reset */}
           <button
             onClick={onClear}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer shrink-0 ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-150 cursor-pointer shrink-0 ${
               hasActiveFilters
-                ? 'border-red-500/30 bg-red-950/20 text-red-400 hover:border-red-500/60 hover:bg-red-950/40 hover:shadow-[0_0_14px_rgba(239,68,68,0.12)]'
-                : 'border-slate-800/60 bg-slate-900/10 text-slate-600 hover:border-slate-700 hover:text-slate-400'
+                ? 'border-red-500/20 bg-red-950/10 text-red-400 hover:border-red-500/40 hover:bg-red-950/20'
+                : 'border-zinc-800 bg-zinc-900/10 text-zinc-500 hover:border-zinc-700 hover:text-zinc-400'
             }`}
           >
             <RotateCcw size={14} className={hasActiveFilters ? 'animate-spin-once' : ''} />
