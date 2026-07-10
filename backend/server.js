@@ -62,4 +62,5 @@ app.delete("/creators/:id", (req, res) => {
   res.status(204).send();
 });
 
-app.listen(4001, () => console.log("Mock API on http://localhost:4001"));
+const PORT = process.env.PORT || 4001;
+app.listen(PORT, () => console.log(`Mock API on port ${PORT}`));
