@@ -42,8 +42,8 @@ function Field({
 }
 
 const INPUT_BASE = 'w-full px-4 py-2.5 rounded-xl border bg-slate-950/60 text-slate-100 placeholder-slate-600 text-sm outline-none transition-all duration-300';
-const INPUT_NORMAL = `${INPUT_BASE} border-slate-800/80 focus:border-[#00BCFF]/50 focus:shadow-[0_0_14px_rgba(0,188,255,0.10)] focus:bg-slate-950/80`;
-const INPUT_ERROR  = `${INPUT_BASE} border-red-500/50 focus:border-red-500/70 focus:shadow-[0_0_12px_rgba(239,68,68,0.10)]`;
+const INPUT_NORMAL = `${INPUT_BASE} border-zinc-800 focus:border-blue-500/40 focus:bg-slate-950/80`;
+const INPUT_ERROR  = `${INPUT_BASE} border-red-500/50 focus:border-red-500/70`;
 
 export default function CreatorModal({ isOpen, onClose, onSubmit, creator, isSubmitting }: CreatorModalProps) {
   const modalRef = useFocusTrap(isOpen, onClose);
@@ -99,17 +99,17 @@ export default function CreatorModal({ isOpen, onClose, onSubmit, creator, isSub
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
       <div
         ref={modalRef}
-        className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/80 backdrop-blur-2xl shadow-[0_24px_80px_rgba(0,0,0,0.6)] animate-scale-up"
+        className="w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/85 backdrop-blur-xl shadow-2xl animate-scale-up"
         role="dialog" aria-modal="true" aria-labelledby="modal-title"
       >
-        {/* Neon top accent */}
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-[#00BCFF]/60 to-transparent" />
+        {/* Modal top accent */}
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/60">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
           <div className="flex items-center gap-3">
-            <div className="p-1.5 rounded-lg bg-[#00BCFF]/10 border border-[#00BCFF]/20">
-              <Zap size={14} className="text-[#00BCFF]" />
+            <div className="p-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              <Zap size={14} className="text-blue-500" />
             </div>
             <div>
               <h2 id="modal-title" className="text-base font-bold text-slate-100 font-display">
@@ -203,17 +203,17 @@ export default function CreatorModal({ isOpen, onClose, onSubmit, creator, isSub
           </Field>
 
           {/* Footer actions */}
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800/60">
+          <div className="flex items-center justify-end gap-3 pt-2 border-t border-zinc-800">
             <button type="button" onClick={onClose} disabled={isSubmitting}
-              className="px-4 py-2.5 text-sm font-medium rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition-all duration-200 cursor-pointer">
+              className="px-4 py-2.5 text-sm font-medium rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-all duration-150 cursor-pointer">
               Cancel
             </button>
             <button
               type="submit" disabled={isSubmitting}
-              className="relative px-6 py-2.5 text-sm font-semibold rounded-xl border border-[#00BCFF]/50 text-[#00BCFF] bg-[#00BCFF]/5 hover:bg-[#00BCFF]/15 hover:border-[#00BCFF]/80 hover:shadow-[0_0_20px_rgba(0,188,255,0.25)] transition-all duration-300 min-w-[130px] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="relative px-6 py-2.5 text-sm font-semibold rounded-xl border border-blue-500/40 text-blue-500 bg-blue-500/5 hover:bg-blue-500/10 hover:border-blue-500/60 transition-all duration-150 min-w-[130px] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (
-                <span className="w-4 h-4 border-2 border-[#00BCFF]/30 border-t-[#00BCFF] rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
               ) : (
                 <>{isEdit ? 'Save Changes' : 'Create Creator'}</>
               )}

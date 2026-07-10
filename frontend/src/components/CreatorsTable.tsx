@@ -66,8 +66,8 @@ export default function CreatorsTable({
   const SortIcon = ({ col }: { col: string }) => {
     if (sortBy !== col) return <ArrowUpDown size={13} className="ml-1.5 opacity-30 group-hover:opacity-70 transition-opacity" />;
     return order === 'desc'
-      ? <ArrowDown size={13} className="ml-1.5 text-[#00BCFF]" />
-      : <ArrowUp size={13} className="ml-1.5 text-[#00BCFF]" />;
+      ? <ArrowDown size={13} className="ml-1.5 text-blue-500" />
+      : <ArrowUp size={13} className="ml-1.5 text-blue-500" />;
   };
 
   /* ── Loading skeleton ── */
@@ -293,7 +293,7 @@ export default function CreatorsTable({
                               onClick={() => onEdit(c)}
                               className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors duration-150 cursor-pointer"
                             >
-                              <Edit2 size={13} className="text-[#00BCFF]" />
+                              <Edit2 size={13} className="text-blue-500" />
                               <span>Edit</span>
                             </button>
                             <div className="mx-3 my-0.5 h-[1px] bg-slate-800/60" />
@@ -329,7 +329,7 @@ export default function CreatorsTable({
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
-            className="p-2 rounded-lg border border-slate-800/60 text-slate-400 hover:text-slate-100 hover:border-[#00BCFF]/40 hover:bg-[#00BCFF]/5 hover:shadow-[0_0_10px_rgba(0,188,255,0.10)] disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-slate-800/60 disabled:hover:shadow-none transition-all duration-200 cursor-pointer"
+            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-zinc-100 hover:border-blue-500/40 hover:bg-blue-500/5 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-zinc-800 transition-all duration-150 cursor-pointer"
           >
             <ChevronLeft size={14} />
           </button>
@@ -341,10 +341,10 @@ export default function CreatorsTable({
               <button
                 key={pn}
                 onClick={() => onPageChange(pn)}
-                className={`w-8 h-8 flex items-center justify-center text-xs font-mono font-semibold rounded-lg border transition-all duration-200 cursor-pointer ${
+                className={`w-8 h-8 flex items-center justify-center text-xs font-mono font-semibold rounded-lg border transition-all duration-150 cursor-pointer ${
                   isActive
-                    ? 'border-[#00BCFF]/50 bg-[#00BCFF]/10 text-[#00BCFF] shadow-[0_0_12px_rgba(0,188,255,0.15)]'
-                    : 'border-slate-800/60 text-slate-500 hover:border-slate-700/80 hover:text-slate-300'
+                    ? 'border-blue-500/50 bg-blue-500/10 text-blue-500'
+                    : 'border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
                 }`}
               >
                 {pn}
@@ -355,7 +355,7 @@ export default function CreatorsTable({
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages}
-            className="p-2 rounded-lg border border-slate-800/60 text-slate-400 hover:text-slate-100 hover:border-[#00BCFF]/40 hover:bg-[#00BCFF]/5 hover:shadow-[0_0_10px_rgba(0,188,255,0.10)] disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-slate-800/60 disabled:hover:shadow-none transition-all duration-200 cursor-pointer"
+            className="p-2 rounded-lg border border-zinc-800 text-zinc-400 hover:text-zinc-100 hover:border-blue-500/40 hover:bg-blue-500/5 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-zinc-800 transition-all duration-150 cursor-pointer"
           >
             <ChevronRight size={14} />
           </button>

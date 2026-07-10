@@ -56,8 +56,8 @@ export default function FilterBar({
       <div
         className={`h-[2px] w-full transition-all duration-500 ${
           hasActiveFilters
-            ? 'bg-gradient-to-r from-transparent via-[#00BCFF]/60 to-transparent'
-            : 'bg-gradient-to-r from-transparent via-slate-800/80 to-transparent'
+            ? 'bg-gradient-to-r from-transparent via-blue-500/40 to-transparent'
+            : 'bg-gradient-to-r from-transparent via-zinc-800 to-transparent'
         }`}
       />
 
@@ -69,7 +69,7 @@ export default function FilterBar({
             Filter Creators
           </span>
           {hasActiveFilters && (
-            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[#00BCFF]/15 border border-[#00BCFF]/25 text-[9px] font-mono font-bold text-[#00BCFF] animate-fade-in">
+            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] font-mono font-bold text-blue-500 animate-fade-in">
               ACTIVE
             </span>
           )}
@@ -84,8 +84,8 @@ export default function FilterBar({
             <div className={`relative transition-all duration-300 ${searchFocused ? 'scale-[1.01]' : ''}`}>
               <Search
                 size={16}
-                className={`absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-300 ${
-                  searchFocused ? 'text-[#00BCFF]' : 'text-slate-500'
+                className={`absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-150 ${
+                  searchFocused ? 'text-blue-500' : 'text-zinc-500'
                 }`}
               />
               <input
@@ -96,10 +96,10 @@ export default function FilterBar({
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
                 placeholder="Name or email…"
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-slate-950/50 text-slate-200 placeholder-slate-600 text-sm outline-none transition-all duration-300 ${
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-zinc-950/50 text-zinc-200 placeholder-zinc-600 text-sm outline-none transition-all duration-150 ${
                   searchFocused
-                    ? 'border-[#00BCFF]/50 shadow-[0_0_16px_rgba(0,188,255,0.12)] bg-slate-950/70'
-                    : 'border-slate-800/80 hover:border-slate-700/80'
+                    ? 'border-blue-500/40 bg-zinc-950/70'
+                    : 'border-zinc-800 hover:border-zinc-700'
                 }`}
               />
             </div>

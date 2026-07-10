@@ -26,13 +26,9 @@ const STATS_CONFIG = [
   {
     title: 'Total Creators',
     key: 'total',
-    description: 'Matching current filters',
+    description: 'Matching active filters',
     icon: Users,
-    accent: '#6366f1',
-    glow: 'rgba(99,102,241,0.2)',
-    border: 'hover:border-indigo-500/40',
-    iconBg: 'bg-indigo-500/10 text-indigo-400',
-    gradient: 'from-indigo-500/8 via-transparent to-transparent',
+    iconColor: 'text-blue-500 bg-blue-500/10 border-blue-500/20',
     trend: '+12%',
   },
   {
@@ -40,23 +36,15 @@ const STATS_CONFIG = [
     key: 'followers',
     description: 'Combined follower count',
     icon: Eye,
-    accent: '#00BCFF',
-    glow: 'rgba(0,188,255,0.2)',
-    border: 'hover:border-[#00BCFF]/40',
-    iconBg: 'bg-[#00BCFF]/10 text-[#00BCFF]',
-    gradient: 'from-[#00BCFF]/8 via-transparent to-transparent',
+    iconColor: 'text-zinc-400 bg-zinc-800 border-zinc-700',
     trend: '+8.4%',
   },
   {
     title: 'Avg. Engagement',
     key: 'engagement',
-    description: 'High-performing metric',
+    description: 'Roster average rate',
     icon: Activity,
-    accent: '#BBF351',
-    glow: 'rgba(187,243,81,0.2)',
-    border: 'hover:border-[#BBF351]/40',
-    iconBg: 'bg-[#BBF351]/10 text-[#BBF351]',
-    gradient: 'from-[#BBF351]/8 via-transparent to-transparent',
+    iconColor: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
     trend: '+3.1%',
   },
   {
@@ -64,11 +52,7 @@ const STATS_CONFIG = [
     key: 'active',
     description: 'Current agency roster',
     icon: Award,
-    accent: '#8B5CF6',
-    glow: 'rgba(139,92,246,0.2)',
-    border: 'hover:border-purple-500/40',
-    iconBg: 'bg-purple-500/10 text-purple-400',
-    gradient: 'from-purple-500/8 via-transparent to-transparent',
+    iconColor: 'text-purple-500 bg-purple-500/10 border-purple-500/20',
     trend: 'Steady',
   },
 ];
@@ -122,73 +106,46 @@ export default function SummaryStats({
         return (
           <div
             key={idx}
-            className={`stat-card group relative overflow-hidden rounded-2xl bg-slate-900/30 backdrop-blur-xl p-5 transition-all duration-300 hover:-translate-y-1.5 cursor-default`}
-            style={{
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = `0 8px 32px ${stat.glow}, 0 0 0 1px ${stat.accent}22`;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '';
-            }}
+            className="stat-card group rounded-xl border border-zinc-800 bg-zinc-900/20 p-5 hover:border-zinc-700 transition-all duration-150 cursor-default"
           >
-            {/* Background gradient */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
-            />
-            {/* Corner glow dot */}
-            <div
-              className="absolute -top-6 -right-6 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"
-              style={{ background: stat.accent }}
-            />
-
             <div className="relative z-10">
               {/* Top row */}
-              <div className="flex items-start justify-between mb-4">
+              <div className="flex items-start justify-between mb-3">
                 <div
-                  className={`p-2.5 rounded-xl border border-white/5 ${stat.iconBg} group-hover:scale-110 transition-transform duration-200`}
+                  className={`p-2.5 rounded-lg border ${stat.iconColor} transition-transform duration-150`}
                   aria-hidden="true"
                 >
                   <Icon size={18} />
                 </div>
                 <div
-                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800/60 border border-slate-700/40"
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800/50 border border-zinc-700/60"
                   aria-label={`Trend: ${stat.trend}`}
                 >
-                  <TrendingUp size={10} style={{ color: stat.accent }} aria-hidden="true" />
-                  <span className="text-[10px] font-mono font-semibold" style={{ color: stat.accent }}>
+                  <TrendingUp size={10} className="text-zinc-500" aria-hidden="true" />
+                  <span className="text-[10px] font-mono font-medium text-zinc-400">
                     {stat.trend}
                   </span>
                 </div>
               </div>
 
-              {/* Value — skeleton shimmer when loading (UI/UX Pro Max: progressive-loading) */}
+              {/* Value — skeleton shimmer when loading */}
               <div className="space-y-1">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 group-hover:text-slate-400 transition-colors duration-200">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500 transition-colors duration-150">
                   {stat.title}
                 </p>
                 {values[idx] === null ? (
-                  <div className="h-8 w-20 rounded-lg bg-slate-800/70 animate-pulse" aria-hidden="true" />
+                  <div className="h-8 w-20 rounded bg-zinc-800/70 animate-pulse" aria-hidden="true" />
                 ) : (
                   <h3
-                    className="text-2xl font-bold tracking-tight text-slate-100 group-hover:text-white transition-colors duration-200 font-display"
+                    className="text-2xl font-bold tracking-tight text-zinc-100 transition-colors duration-150 font-display"
                     aria-label={`${stat.title}: ${values[idx]}`}
                   >
                     {values[idx]}
                   </h3>
                 )}
-                <p className="text-[11px] text-slate-600 group-hover:text-slate-500 transition-colors duration-200">
+                <p className="text-[11px] text-zinc-500 transition-colors duration-150">
                   {stat.description}
                 </p>
-              </div>
-
-              {/* Bottom accent bar — transform only, no width (UI/UX Pro Max: transform-performance) */}
-              <div className="mt-4 h-[2px] overflow-hidden rounded-full" aria-hidden="true">
-                <div
-                  className="h-full w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out rounded-full"
-                  style={{ background: `linear-gradient(90deg, ${stat.accent}, transparent)` }}
-                />
               </div>
             </div>
           </div>

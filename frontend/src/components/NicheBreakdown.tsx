@@ -11,13 +11,13 @@ interface NicheBreakdownProps {
   isLoading: boolean;
 }
 
-const NICHE_CONFIG: Record<Niche, { color: string; glow: string; label: string; emoji: string }> = {
-  beauty:  { color: '#f472b6', glow: 'rgba(244,114,182,0.25)', label: 'Beauty',  emoji: '✨' },
-  fitness: { color: '#34d399', glow: 'rgba(52,211,153,0.25)',  label: 'Fitness', emoji: '💪' },
-  travel:  { color: '#2dd4bf', glow: 'rgba(45,212,191,0.25)', label: 'Travel',  emoji: '✈️' },
-  food:    { color: '#fbbf24', glow: 'rgba(251,191,36,0.25)',  label: 'Food',    emoji: '🍽️' },
-  tech:    { color: '#818cf8', glow: 'rgba(129,140,248,0.25)', label: 'Tech',    emoji: '⚡' },
-  fashion: { color: '#c084fc', glow: 'rgba(192,132,252,0.25)', label: 'Fashion', emoji: '👗' },
+const NICHE_CONFIG: Record<Niche, { color: string; label: string }> = {
+  beauty:  { color: '#f472b6', label: 'Beauty' },
+  fitness: { color: '#10b981', label: 'Fitness' },
+  travel:  { color: '#06b6d4', label: 'Travel' },
+  food:    { color: '#f59e0b', label: 'Food' },
+  tech:    { color: '#3b82f6', label: 'Tech' },
+  fashion: { color: '#8b5cf6', label: 'Fashion' },
 };
 
 export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheBreakdownProps) {
@@ -81,24 +81,21 @@ export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheB
   const topNiche = sorted[0]?.niche;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl shadow-xl">
-      {/* Subtle animated corner gradient */}
-      <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-indigo-500/5 blur-2xl pointer-events-none" />
-
-      <div className="relative p-6 space-y-5">
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/20 shadow-sm">
+      <div className="p-6 space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-              <BarChart3 size={15} className="text-indigo-400" />
+            <div className="p-1.5 rounded-lg bg-zinc-800 border border-zinc-700">
+              <BarChart3 size={15} className="text-zinc-300" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-200 font-display">Category Distribution</h3>
-              <p className="text-[10px] text-slate-600 font-mono mt-0.5">{total} creators total</p>
+              <h3 className="text-sm font-semibold text-zinc-200 font-display">Category Distribution</h3>
+              <p className="text-[10px] text-zinc-500 font-mono mt-0.5">{total} creators total</p>
             </div>
           </div>
           {topNiche && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/60 border border-slate-700/40">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-800/40 border border-zinc-700/60">
               <Sparkles size={10} style={{ color: NICHE_CONFIG[topNiche].color }} />
               <span className="text-[10px] font-mono font-semibold capitalize" style={{ color: NICHE_CONFIG[topNiche].color }}>
                 {topNiche} leads
@@ -121,10 +118,10 @@ export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheB
               >
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="text-base leading-none select-none">{cfg.emoji}</span>
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: cfg.color }} aria-hidden="true" />
                     <span
-                      className="font-semibold capitalize transition-colors duration-200"
-                      style={{ color: isHovered ? cfg.color : '#cbd5e1' }}
+                      className="font-semibold capitalize transition-colors duration-150"
+                      style={{ color: isHovered ? cfg.color : '#e4e4e7' }}
                     >
                       {cfg.label}
                     </span>
@@ -132,11 +129,11 @@ export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheB
                   <div className="flex items-center gap-2">
                     <span className="font-mono font-semibold text-slate-300">{count}</span>
                     <span
-                      className="font-mono text-[10px] px-1.5 py-0.5 rounded-full transition-all duration-200"
+                      className="font-mono text-[10px] px-1.5 py-0.5 rounded-full transition-all duration-150"
                       style={{
                         color: cfg.color,
-                        background: isHovered ? `${cfg.color}18` : 'rgba(15,23,42,0.5)',
-                        border: `1px solid ${isHovered ? cfg.color + '40' : 'transparent'}`,
+                        background: isHovered ? `${cfg.color}12` : 'rgba(24,24,27,0.5)',
+                        border: `1px solid ${isHovered ? cfg.color + '30' : 'transparent'}`,
                       }}
                     >
                       {pct}%
@@ -145,17 +142,14 @@ export default function NicheBreakdown({ nicheCounts, total, isLoading }: NicheB
                 </div>
 
                 {/* Bar track */}
-                <div className="h-2 w-full rounded-full bg-slate-950/70 border border-slate-800/50 overflow-hidden">
+                <div className="h-2 w-full rounded-full bg-zinc-950 border border-zinc-800/60 overflow-hidden">
                   <div
                     ref={(el) => { barsRef.current[i] = el; }}
                     data-width={pct}
-                    className="h-full rounded-full transition-all duration-300"
+                    className="h-full rounded-full transition-all duration-150"
                     style={{
                       width: '0%',
-                      background: isHovered
-                        ? `linear-gradient(90deg, ${cfg.color}, ${cfg.color}bb)`
-                        : `linear-gradient(90deg, ${cfg.color}cc, ${cfg.color}66)`,
-                      boxShadow: isHovered ? `0 0 10px ${cfg.glow}` : 'none',
+                      background: cfg.color,
                     }}
                   />
                 </div>
