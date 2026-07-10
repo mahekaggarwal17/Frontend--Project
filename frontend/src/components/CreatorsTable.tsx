@@ -73,32 +73,32 @@ export default function CreatorsTable({
   /* ── Loading skeleton ── */
   if (isLoading) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl shadow-xl">
+      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/20 shadow-sm">
         <table className="w-full text-left text-sm border-collapse">
-          <thead className="bg-slate-900/50 border-b border-slate-800/80">
+          <thead className="bg-zinc-900/50 border-b border-zinc-800">
             <tr>
               {['Name', 'Niche', 'Followers', 'Engagement', 'Status', 'Actions'].map((h) => (
-                <th key={h} className="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-slate-500">{h}</th>
+                <th key={h} className="px-6 py-4 text-[11px] font-semibold uppercase tracking-widest text-zinc-500">{h}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-900/60">
+          <tbody className="divide-y divide-zinc-900/50">
             {[...Array(6)].map((_, i) => (
               <tr key={i} className="animate-pulse">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-slate-800/70" />
+                    <div className="w-9 h-9 rounded-full bg-zinc-800/70" />
                     <div className="space-y-1.5">
-                      <div className="h-3.5 bg-slate-800/70 rounded w-28" />
-                      <div className="h-2.5 bg-slate-800/50 rounded w-36" />
+                      <div className="h-3.5 bg-zinc-800/70 rounded w-28" />
+                      <div className="h-2.5 bg-zinc-800/50 rounded w-36" />
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4"><div className="h-6 bg-slate-800/60 rounded-full w-16" /></td>
-                <td className="px-6 py-4"><div className="h-3.5 bg-slate-800/60 rounded w-14" /></td>
-                <td className="px-6 py-4"><div className="h-3.5 bg-slate-800/60 rounded w-12" /></td>
-                <td className="px-6 py-4"><div className="h-6 bg-slate-800/60 rounded-full w-16" /></td>
-                <td className="px-6 py-4"><div className="h-8 bg-slate-800/60 rounded-lg w-8 ml-auto" /></td>
+                <td className="px-6 py-4"><div className="h-6 bg-zinc-800/60 rounded-full w-16" /></td>
+                <td className="px-6 py-4"><div className="h-3.5 bg-zinc-800/60 rounded w-14" /></td>
+                <td className="px-6 py-4"><div className="h-3.5 bg-zinc-800/60 rounded w-12" /></td>
+                <td className="px-6 py-4"><div className="h-6 bg-zinc-800/60 rounded-full w-16" /></td>
+                <td className="px-6 py-4"><div className="h-8 bg-zinc-800/60 rounded-lg w-8 ml-auto" /></td>
               </tr>
             ))}
           </tbody>
@@ -110,19 +110,19 @@ export default function CreatorsTable({
   /* ── Error state ── */
   if (isError) {
     return (
-      <div className="p-10 rounded-2xl border border-red-500/20 bg-red-950/5 backdrop-blur-xl text-center space-y-5">
-        <div className="inline-flex p-4 rounded-2xl bg-red-950/30 border border-red-500/20 text-red-400">
+      <div className="p-10 rounded-xl border border-red-900/20 bg-red-950/5 text-center space-y-5">
+        <div className="inline-flex p-4 rounded-xl bg-red-950/30 border border-red-900/25 text-red-400">
           <AlertTriangle size={30} />
         </div>
         <div className="space-y-1">
-          <h3 className="text-base font-semibold text-red-200 font-display">Connection Failed</h3>
+          <h3 className="text-base font-semibold text-red-200 font-display">Couldn't load creators.</h3>
           <p className="text-sm text-red-400/70 max-w-sm mx-auto">
-            {error?.message || 'Could not fetch creators. Ensure the backend is running.'}
+            Please try again. {error?.message ? `(${error.message})` : ''}
           </p>
         </div>
         <button
           onClick={onRetry}
-          className="px-5 py-2.5 text-sm font-semibold rounded-xl border border-red-500/40 text-red-400 hover:bg-red-500/10 hover:border-red-500/60 transition-all duration-300 cursor-pointer"
+          className="px-5 py-2.5 text-sm font-semibold rounded-xl border border-red-500/40 text-red-450 hover:bg-red-500/10 hover:border-red-500/65 transition-all duration-150 cursor-pointer"
         >
           Retry
         </button>
@@ -137,13 +137,13 @@ export default function CreatorsTable({
   /* ── Empty state ── */
   if (creators.length === 0) {
     return (
-      <div className="py-20 rounded-2xl border border-slate-800/60 bg-slate-900/20 backdrop-blur-xl text-center space-y-4">
-        <div className="inline-flex p-5 rounded-2xl bg-slate-900/60 border border-slate-800/60 text-slate-600">
+      <div className="py-20 rounded-xl border border-zinc-800 bg-zinc-900/20 text-center space-y-4">
+        <div className="inline-flex p-5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-600">
           <FolderOpen size={32} />
         </div>
         <div className="space-y-1">
-          <h3 className="text-base font-semibold text-slate-300 font-display">No creators found</h3>
-          <p className="text-sm text-slate-500 max-w-xs mx-auto">
+          <h3 className="text-base font-semibold text-zinc-300 font-display">No creators found</h3>
+          <p className="text-sm text-zinc-550 max-w-xs mx-auto">
             Try clearing your filters or adjusting follower ranges.
           </p>
         </div>

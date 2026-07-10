@@ -1,6 +1,19 @@
 # Creator Directory Admin Screen (Frontend Challenge)
 
-A high-fidelity, modern, and visually stunning Creator Directory Admin Screen designed for talent/influencer agencies. Built with **Next.js 15 (App Router)**, **Tailwind CSS**, and **TanStack Query (v5)**. Talk to a custom **Express Mock API server** with realistic seed data.
+A high-fidelity, modern, and visually stunning Creator Directory Admin Screen designed for talent/influencer agencies. Built with **Next.js 16.2 (App Router)**, **Tailwind CSS**, and **TanStack Query (v5)**. Talk to a custom **Express Mock API server** with realistic seed data.
+
+---
+
+## Key Features
+
+* **Server-side pagination** — server-driven (the API returns a page of results plus total count)
+* **Server-side sorting** — click header columns to trigger API re-sort
+* **Server-side filtering** — niche category dropdown and follower-count range filter
+* **Create, edit, and delete creators** — full client-side form validations and modals
+* **Optimistic updates with TanStack Query** — UI updates immediately on mutations with cache rollbacks on error
+* **Responsive design** — beautiful Forest & Mint layout optimized for all viewports
+* **Mock Express API** — fully customizable mock API backend with realistic seed data
+* **Deployed on Render** — live hosting configuration included
 
 ---
 
