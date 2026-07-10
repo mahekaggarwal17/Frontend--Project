@@ -11,14 +11,14 @@ import {
 import { Creator } from '../types';
 import SummaryStats from '../components/SummaryStats';
 import NicheBreakdown from '../components/NicheBreakdown';
+import SupportedPlatforms from '../components/SupportedPlatforms';
 import FilterBar from '../components/FilterBar';
 import CreatorsTable from '../components/CreatorsTable';
 import CreatorModal from '../components/CreatorModal';
 import DeleteModal from '../components/DeleteModal';
 import { Plus, CheckCircle2, Download } from 'lucide-react';
 import { fetchCreators } from '../lib/api';
-import HeroStats from '../components/HeroStats';
-import TickerStrip from '../components/TickerStrip';
+
 
 function CreatorDirectoryContent() {
   const router = useRouter();
@@ -233,125 +233,40 @@ function CreatorDirectoryContent() {
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 border border-[#00BCFF]/30 bg-slate-900/95 backdrop-blur-xl text-[#00BCFF] rounded-2xl shadow-[0_0_30px_rgba(0,188,255,0.15)] animate-scale-up">
-          <CheckCircle2 size={18} />
-          <span className="text-sm font-semibold">{notification}</span>
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 border border-zinc-800 bg-zinc-900 text-zinc-100 rounded-xl shadow-lg animate-scale-up">
+          <CheckCircle2 size={18} className="text-emerald-500" />
+          <span className="text-sm font-medium">{notification}</span>
         </div>
       )}
 
-      {/* ── Hero Banner (Anthropic frontend-design skill applied) ──── */}
-      <div className="relative -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden">
-        {/* Background: full-bleed dark with scanline texture */}
-        <div className="absolute inset-0 bg-[#030712]" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,1) 2px, rgba(255,255,255,1) 3px)', backgroundSize: '100% 3px' }}
-          aria-hidden="true"
-        />
-        {/* Left neon bleed — aesthetic risk: asymmetric color accent */}
-        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#00BCFF]/80 via-[#6366f1]/40 to-transparent" aria-hidden="true" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00BCFF]/5 via-transparent to-transparent" aria-hidden="true" />
-        {/* Neon bottom edge */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-[#00BCFF]/60 via-[#6366f1]/30 to-transparent" aria-hidden="true" />
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 pb-4 border-b border-zinc-800">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-100 font-display">Creators</h1>
+          <p className="text-sm text-zinc-400 mt-1 max-w-xl">
+            Roster directory for talent management. Monitor categories, total reach, engagement metrics, and active profiles.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={handleExportCSV}
+            className="group flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl border border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 hover:bg-zinc-800/20 transition-all duration-150 cursor-pointer"
+            aria-label="Export visible creators to CSV"
+          >
+            <Download size={15} className="group-hover:scale-105 transition-transform" aria-hidden="true" />
+            <span>Export CSV</span>
+          </button>
 
-        <div className="relative px-4 sm:px-6 lg:px-8 py-10 sm:py-14 max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
-
-            {/* Left: The thesis — leading with the most characteristic thing */}
-            <div className="space-y-4 max-w-2xl">
-              {/* Eyebrow — encodes real info (not decoration) */}
-              <div className="flex items-center gap-3" aria-label="Admin area: Management Console">
-                <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.28em] text-[#00BCFF]/70">
-                  Management Console
-                </span>
-                <span className="h-[1px] w-8 bg-[#00BCFF]/30" aria-hidden="true" />
-                <span className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.2em]">v2.4.1</span>
-              </div>
-
-              {/* Aesthetic risk: oversized split-weight heading — display numeral + word */}
-              {/* frontend-design skill: "typography carries the personality of the page" */}
-              <h1 className="font-display leading-none" aria-label="Creator Directory">
-                <span className="block text-[clamp(3rem,8vw,6rem)] font-bold tracking-[-0.03em] text-slate-100">
-                  Creator
-                </span>
-                <span className="block text-[clamp(3rem,8vw,6rem)] font-bold tracking-[-0.03em]"
-                  style={{ WebkitTextStroke: '1px rgba(0,188,255,0.5)', color: 'transparent' }}>
-                  Directory
-                </span>
-              </h1>
-
-              {/* Subheading — specific, not generic */}
-              <p className="text-sm text-slate-400 max-w-sm leading-relaxed font-sans">
-                One source of truth for your creator roster — follower counts, engagement rates, niche breakdowns, and every deal in motion.
-              </p>
-
-              {/* Niche tags — structural labels that encode real content */}
-              <div className="flex flex-wrap items-center gap-2 pt-1" aria-label="Supported niches">
-                {[
-                  { label: 'Beauty', color: '#f472b6' },
-                  { label: 'Fitness', color: '#34d399' },
-                  { label: 'Travel', color: '#60a5fa' },
-                  { label: 'Food', color: '#fb923c' },
-                  { label: 'Tech', color: '#00BCFF' },
-                  { label: 'Fashion', color: '#a78bfa' },
-                ].map(({ label, color }) => (
-                  <span
-                    key={label}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-900/60 text-slate-400"
-                    style={{ border: `1px solid ${color}25` }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} aria-hidden="true" />
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Actions — vertically anchored to heading baseline */}
-            <div className="flex flex-col gap-3 lg:items-end shrink-0">
-              {/* Decorative stat — the most characteristic data point up front */}
-              <div className="flex items-baseline gap-2 lg:justify-end" aria-label="Version indicator">
-                <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold font-display text-slate-100 leading-none tabular-nums">
-                  CRM
-                </span>
-                <span className="text-xs font-mono text-[#00BCFF] uppercase tracking-widest">Pro</span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleExportCSV}
-                  className="group flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl border border-slate-700/50 bg-slate-900/40 text-slate-400 hover:border-[#BBF351]/50 hover:text-[#BBF351] hover:shadow-[0_0_16px_rgba(187,243,81,0.15)] hover:bg-[#BBF351]/5 transition-all duration-200 cursor-pointer"
-                  aria-label="Export visible creators to CSV"
-                >
-                  <Download size={15} className="group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
-                  <span>Export CSV</span>
-                </button>
-
-                <button
-                  onClick={() => { setSelectedCreator(null); setIsModalOpen(true); }}
-                  className="group relative flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl overflow-hidden border border-[#00BCFF]/40 text-[#00BCFF] shadow-[0_0_16px_rgba(0,188,255,0.12)] hover:shadow-[0_0_28px_rgba(0,188,255,0.28)] hover:border-[#00BCFF]/70 hover:bg-[#00BCFF]/8 transition-all duration-200 cursor-pointer"
-                  aria-label="Add a new creator to the directory"
-                >
-                  <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-r from-transparent via-[#00BCFF]/5 to-transparent" aria-hidden="true" />
-                  <Plus size={15} className="relative z-10 group-hover:rotate-90 transition-transform duration-200" aria-hidden="true" />
-                  <span className="relative z-10">Add Creator</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={() => { setSelectedCreator(null); setIsModalOpen(true); }}
+            className="group flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-blue-600 text-white hover:bg-blue-500 shadow-sm transition-all duration-150 cursor-pointer"
+            aria-label="Add a new creator to the directory"
+          >
+            <Plus size={15} className="group-hover:scale-105 transition-transform" aria-hidden="true" />
+            <span>Add Creator</span>
+          </button>
         </div>
       </div>
-      {/* ── End Banner ───────────────────────────────────────────── */}
-
-
-      {/* Monk-E style hero stat counters with corner brackets */}
-      <HeroStats />
-
-      {/* Platform ticker strip — infinite marquee */}
-      <TickerStrip label="Live Platforms" />
-
-      {/* Divider */}
-      <div className="h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent" />
 
       {/* Summary Stats Dashboard */}
       <SummaryStats
@@ -362,12 +277,19 @@ function CreatorDirectoryContent() {
         isLoading={isLoading || isStatsLoading}
       />
 
-      {/* Niche Category Distribution Chart */}
-      <NicheBreakdown
-        nicheCounts={nicheCounts}
-        total={totalMatchingCount}
-        isLoading={isLoading || isStatsLoading}
-      />
+      {/* Insights Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <NicheBreakdown
+            nicheCounts={nicheCounts}
+            total={totalMatchingCount}
+            isLoading={isLoading || isStatsLoading}
+          />
+        </div>
+        <div className="lg:col-span-1">
+          <SupportedPlatforms />
+        </div>
+      </div>
 
       {/* Filter Bar */}
       <FilterBar
@@ -435,11 +357,11 @@ export default function Page() {
         <div className="flex-1 flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
             <div className="relative w-14 h-14">
-              <div className="absolute inset-0 rounded-full border-4 border-slate-800" />
-              <div className="absolute inset-0 rounded-full border-4 border-t-[#00BCFF] border-r-[#8B5CF6]/40 border-b-transparent border-l-transparent animate-spin" />
-              <div className="absolute inset-3 rounded-full bg-[#00BCFF]/10 animate-pulse" />
+              <div className="absolute inset-0 rounded-full border-4 border-zinc-800" />
+              <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 border-r-blue-500/20 border-b-transparent border-l-transparent animate-spin" />
+              <div className="absolute inset-3 rounded-full bg-blue-500/5 animate-pulse" />
             </div>
-            <p className="text-sm text-slate-500 font-medium font-mono tracking-wider">Initializing Dashboard...</p>
+            <p className="text-sm text-zinc-500 font-medium font-mono tracking-wider">Initializing Dashboard...</p>
           </div>
         </div>
       }
