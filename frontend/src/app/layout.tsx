@@ -40,19 +40,15 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-[#030712] text-slate-100 font-sans relative overflow-x-hidden">
-        {/* Aurora Mesh Gradient Background */}
+        {/* Background Grid */}
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="aurora-blob aurora-blob-1" />
-          <div className="aurora-blob aurora-blob-2" />
-          <div className="aurora-blob aurora-blob-3" />
-          {/* Grid overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a20_1px,transparent_1px),linear-gradient(to_bottom,#0f172a20_1px,transparent_1px)] bg-[size:64px_64px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:64px_64px]" />
         </div>
 
         <div className="relative z-10 flex flex-col min-h-dvh">
           <Providers>
             <Header />
-            {/* role=main + id for skip-link target (UI/UX Pro Max: skip-links, keyboard-nav) */}
+            {/* Skip-link target for keyboard navigation accessibility */}
             <main id="main-content" role="main" className="flex-1">
               {children}
             </main>
