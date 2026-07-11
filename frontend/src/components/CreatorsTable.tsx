@@ -283,7 +283,10 @@ export default function CreatorsTable({
                     </td>
 
                     {/* Actions menu */}
-                    <td className="px-6 py-4 text-right relative actions-menu-container">
+                    <td 
+                      className="px-6 py-4 text-right relative actions-menu-container"
+                      style={activeMenuId === c.id ? { zIndex: 30 } : undefined}
+                    >
                       <button
                         onClick={(e) => { e.stopPropagation(); setActiveMenuId(activeMenuId === c.id ? null : c.id); }}
                         className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800/60 transition-all duration-200 cursor-pointer"
