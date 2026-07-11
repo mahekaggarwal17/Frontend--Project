@@ -9,6 +9,7 @@ export function useCreatorsQuery(filters: CreatorFilters) {
     queryFn: () => fetchCreators(filters),
     placeholderData: (previousData) => previousData, // keep old data visible while fetching new page/filters
     staleTime: 5000,
+    enabled: typeof window !== 'undefined',
   });
 }
 
